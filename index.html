@@ -1,0 +1,1691 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="จุ้ย เดลิเวอรี่">
+<meta name="description" content="สั่งขนมออนไลน์ จุ้ย เดลิเวอรี่ อำนาจเจริญ">
+<meta name="theme-color" content="#c0392b">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="จุ้ย เดลิเวอรี่">
+<title>จุ้ย เดลิเวอรี่</title>
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --primary: #c0392b; --primary-dark: #922b21; --primary-light: #e74c3c;
+  --accent: #f39c12; --accent-dark: #d68910;
+  --bg: #fef9f0; --card: #ffffff; --text: #2c1a0e; --text2: #6b4c35; --text3: #9d7a62;
+  --border: #f0dcc8; --success: #27ae60; --info: #2980b9;
+  --radius: 16px; --shadow: 0 4px 20px rgba(192,57,43,0.12); --shadow2: 0 2px 10px rgba(0,0,0,0.08);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+body { font-family: 'Kanit', sans-serif; background: var(--bg); color: var(--text); max-width: 430px; margin: 0 auto; min-height: 100vh; overflow-x: hidden; }
+.screen { display: none; min-height: 100vh; padding-bottom: 80px; }
+.screen.active { display: block; }
+.topbar { background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%); padding: 14px 16px 12px; display: flex; align-items: center; gap: 10px; position: sticky; top: 0; z-index: 100; box-shadow: 0 3px 15px rgba(192,57,43,0.3); }
+.topbar-logo { width: 42px; height: 42px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(255,255,255,0.6); }
+.topbar-title { color: #fff; font-size: 18px; font-weight: 700; flex: 1; }
+.topbar-sub { color: rgba(255,255,255,0.8); font-size: 11px; display: block; font-weight: 400; }
+.topbar-cart-btn { background: rgba(255,255,255,0.2); border: none; border-radius: 12px; padding: 8px 12px; color: #fff; cursor: pointer; font-size: 20px; position: relative; }
+.cart-badge { position: absolute; top: -4px; right: -4px; background: var(--accent); color: #fff; font-size: 10px; font-weight: 700; border-radius: 50%; width: 18px; height: 18px; display: none; align-items: center; justify-content: center; }
+.bottom-nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 430px; background: #fff; border-top: 1px solid var(--border); display: flex; box-shadow: 0 -4px 20px rgba(0,0,0,0.1); z-index: 200; }
+.nav-btn { flex: 1; padding: 10px 4px 8px; border: none; background: none; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 3px; color: var(--text3); font-family: 'Kanit', sans-serif; font-size: 10px; transition: color 0.2s; }
+.nav-btn.active { color: var(--primary); }
+.nav-icon { font-size: 22px; }
+.hero-banner { background: linear-gradient(135deg, #c0392b 0%, #922b21 50%, #7b241c 100%); padding: 20px 16px 24px; color: #fff; text-align: center; position: relative; overflow: hidden; }
+.hero-banner::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 80% 20%, rgba(255,200,100,0.2) 0%, transparent 60%); }
+.hero-banner h2 { font-size: 24px; font-weight: 800; margin-bottom: 4px; }
+.hero-banner p { font-size: 13px; opacity: 0.85; font-weight: 400; }
+.hero-promo-tags { display: flex; gap: 8px; justify-content: center; margin-top: 12px; flex-wrap: wrap; }
+.promo-tag { background: rgba(255,255,255,0.2); border-radius: 20px; padding: 4px 12px; font-size: 11px; font-weight: 600; border: 1px solid rgba(255,255,255,0.3); }
+.section-label { padding: 16px 16px 10px; font-size: 16px; font-weight: 700; color: var(--text); display: flex; align-items: center; gap: 8px; }
+.section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+.products-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 0 12px; }
+.product-card { background: #fff; border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow2); border: 1px solid var(--border); transition: transform 0.2s; position: relative; }
+.product-card:active { transform: scale(0.97); }
+.product-img { width: 100%; height: 130px; object-fit: cover; display: block; }
+.product-info { padding: 10px; }
+.product-name { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 4px; line-height: 1.3; }
+.product-price { font-size: 16px; font-weight: 800; color: var(--primary); }
+.product-badge { position: absolute; top: 8px; left: 8px; background: var(--accent); color: #fff; font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 6px; }
+.add-btn { width: 100%; margin-top: 8px; background: var(--primary); color: #fff; border: none; border-radius: 10px; padding: 7px; font-size: 12px; font-weight: 600; cursor: pointer; font-family: 'Kanit', sans-serif; transition: background 0.2s; }
+.add-btn:active { background: var(--primary-dark); }
+.product-card.sold-out .product-img { filter: grayscale(80%); opacity: 0.7; }
+.product-card.sold-out .add-btn { background: #ccc; cursor: not-allowed; }
+.sold-out-badge { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; pointer-events: none; }
+.sold-out-label { background: rgba(0,0,0,0.65); color: #fff; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 700; }
+.qty-row { display: flex; align-items: center; gap: 4px; margin-top: 8px; }
+.qty-btn { width: 28px; height: 28px; border-radius: 8px; background: var(--bg); border: 1px solid var(--border); font-size: 16px; font-weight: 700; cursor: pointer; color: var(--primary); display: flex; align-items: center; justify-content: center; }
+.qty-display { flex: 1; text-align: center; font-weight: 700; font-size: 14px; }
+.modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 500; align-items: flex-end; justify-content: center; }
+.modal-overlay.open { display: flex; }
+.modal-sheet { background: #fff; width: 100%; max-width: 430px; border-radius: 24px 24px 0 0; padding: 20px 16px 32px; max-height: 85vh; overflow-y: auto; }
+.modal-handle { width: 40px; height: 4px; background: #ddd; border-radius: 2px; margin: 0 auto 16px; }
+.modal-title { font-size: 18px; font-weight: 700; margin-bottom: 16px; }
+.option-item { display: flex; align-items: center; gap: 10px; padding: 12px 0; border-bottom: 1px solid var(--border); cursor: pointer; }
+.option-item:last-child { border-bottom: none; }
+.option-check { width: 22px; height: 22px; border-radius: 6px; border: 2px solid var(--border); flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+.option-check.checked { background: var(--primary); border-color: var(--primary); color: #fff; }
+.option-label { flex: 1; font-size: 14px; }
+.modal-confirm-btn { width: 100%; margin-top: 16px; background: var(--primary); color: #fff; border: none; border-radius: 14px; padding: 14px; font-size: 16px; font-weight: 700; cursor: pointer; font-family: 'Kanit', sans-serif; }
+
+/* BULK ORDER MODAL */
+.bulk-modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 500; align-items: flex-end; justify-content: center; }
+.bulk-modal.open { display: flex; }
+.bulk-sheet { background: #fff; width: 100%; max-width: 430px; border-radius: 24px 24px 0 0; padding: 20px 16px 32px; max-height: 90vh; overflow-y: auto; }
+.bulk-banner { background: linear-gradient(135deg, #f39c12, #e67e22); border-radius: 12px; padding: 12px 14px; color: #fff; margin-bottom: 16px; }
+.bulk-banner-title { font-size: 16px; font-weight: 800; margin-bottom: 4px; }
+.bulk-banner-sub { font-size: 12px; opacity: 0.9; }
+.bulk-promo-box { background: #fff3cd; border: 1px solid #ffc107; border-radius: 10px; padding: 10px 12px; margin: 10px 0; font-size: 13px; }
+.bulk-promo-title { font-weight: 700; color: #856404; margin-bottom: 4px; }
+.bulk-input-row { display: flex; align-items: center; gap: 10px; margin: 10px 0; }
+.bulk-input { flex: 1; padding: 10px 12px; border: 2px solid var(--border); border-radius: 10px; font-size: 16px; font-family: 'Kanit', sans-serif; text-align: center; font-weight: 700; outline: none; }
+.bulk-input:focus { border-color: var(--primary); }
+.bulk-summary { background: #fef9f0; border: 1px solid var(--border); border-radius: 12px; padding: 12px; margin: 12px 0; }
+.bulk-row { display: flex; justify-content: space-between; padding: 4px 0; font-size: 13px; }
+.bulk-total-row { font-size: 16px; font-weight: 800; color: var(--primary); border-top: 1px solid var(--border); margin-top: 6px; padding-top: 6px; }
+.bulk-free-row { color: var(--success); font-weight: 700; }
+.bulk-warning { background: #fff3cd; border-radius: 8px; padding: 8px 12px; font-size: 12px; color: #856404; margin: 8px 0; display: flex; gap: 6px; align-items: flex-start; }
+
+.cart-empty { text-align: center; padding: 60px 20px; color: var(--text3); }
+.cart-empty .empty-icon { font-size: 64px; margin-bottom: 16px; }
+.cart-item { background: #fff; margin: 8px 12px; border-radius: var(--radius); padding: 12px; display: flex; align-items: center; gap: 10px; box-shadow: var(--shadow2); border: 1px solid var(--border); }
+.cart-item-img { width: 60px; height: 60px; border-radius: 10px; object-fit: cover; }
+.cart-item-info { flex: 1; }
+.cart-item-name { font-size: 13px; font-weight: 600; margin-bottom: 2px; }
+.cart-item-opts { font-size: 11px; color: var(--text3); margin-bottom: 2px; }
+.cart-item-bulk { font-size: 11px; color: var(--success); font-weight: 600; margin-bottom: 2px; }
+.cart-item-price { font-size: 15px; font-weight: 700; color: var(--primary); }
+.cart-item-controls { display: flex; align-items: center; gap: 6px; }
+.cart-remove-btn { background: none; border: none; font-size: 20px; cursor: pointer; color: #e74c3c; }
+.cart-footer { margin: 12px; background: #fff; border-radius: var(--radius); padding: 16px; box-shadow: var(--shadow2); border: 1px solid var(--border); }
+.cart-row { display: flex; justify-content: space-between; padding: 4px 0; font-size: 14px; }
+.cart-total { font-size: 17px; font-weight: 800; color: var(--primary); border-top: 1px solid var(--border); margin-top: 8px; padding-top: 8px; }
+.input-group { margin: 8px 12px; }
+.input-label { font-size: 13px; font-weight: 600; color: var(--text2); margin-bottom: 6px; display: block; }
+.input-field { width: 100%; padding: 12px 14px; border: 1px solid var(--border); border-radius: 12px; font-size: 14px; font-family: 'Kanit', sans-serif; background: #fff; color: var(--text); outline: none; }
+.input-field:focus { border-color: var(--primary); }
+select.input-field { cursor: pointer; }
+.payment-options { display: flex; gap: 8px; margin: 0 12px; }
+.pay-option { flex: 1; padding: 10px 6px; border-radius: 12px; border: 2px solid var(--border); background: #fff; text-align: center; cursor: pointer; font-family: 'Kanit', sans-serif; font-size: 12px; font-weight: 600; color: var(--text2); transition: all 0.2s; }
+.pay-option.selected { border-color: var(--primary); background: #fdf0f0; color: var(--primary); }
+.pay-icon { font-size: 20px; display: block; margin-bottom: 4px; }
+.order-btn { margin: 16px 12px; width: calc(100% - 24px); background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%); color: #fff; border: none; border-radius: 16px; padding: 16px; font-size: 16px; font-weight: 800; cursor: pointer; font-family: 'Kanit', sans-serif; box-shadow: 0 4px 15px rgba(192,57,43,0.4); }
+.orders-list { padding: 8px 12px; }
+.order-card { background: #fff; border-radius: var(--radius); padding: 14px; margin-bottom: 10px; box-shadow: var(--shadow2); border: 1px solid var(--border); }
+.order-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.order-id { font-size: 13px; font-weight: 700; }
+.order-status { font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; }
+.status-pending { background: #fff3cd; color: #856404; }
+.status-preparing { background: #cff4fc; color: #055160; }
+.status-delivering { background: #d1e7dd; color: #0f5132; }
+.status-done { background: #d1e7dd; color: #0f5132; }
+.order-total { font-size: 15px; font-weight: 700; color: var(--primary); }
+.order-track { display: flex; align-items: center; margin-top: 12px; }
+.track-step { flex: 1; text-align: center; position: relative; }
+.track-dot { width: 24px; height: 24px; border-radius: 50%; background: #e0e0e0; margin: 0 auto 4px; display: flex; align-items: center; justify-content: center; font-size: 12px; }
+.track-dot.done { background: var(--success); color: #fff; }
+.track-dot.active { background: var(--primary); color: #fff; animation: pulse 1.5s infinite; }
+.track-label { font-size: 9px; color: var(--text3); line-height: 1.2; }
+.track-line { position: absolute; top: 12px; left: 60%; width: 80%; height: 2px; background: #e0e0e0; }
+.track-line.done { background: var(--success); }
+@keyframes pulse { 0%,100% { box-shadow: 0 0 0 0 rgba(192,57,43,0.4); } 50% { box-shadow: 0 0 0 6px rgba(192,57,43,0); } }
+.profile-header { background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%); padding: 24px 16px 40px; text-align: center; color: #fff; }
+.profile-avatar { font-size: 56px; margin-bottom: 8px; }
+.profile-name { font-size: 20px; font-weight: 700; }
+.points-card { margin: -20px 16px 16px; background: #fff; border-radius: var(--radius); padding: 14px; box-shadow: var(--shadow); display: flex; align-items: center; gap: 12px; }
+.points-icon { font-size: 32px; }
+.points-info { flex: 1; }
+.points-val { font-size: 22px; font-weight: 800; color: var(--accent-dark); }
+.points-label { font-size: 12px; color: var(--text3); }
+.points-progress { margin-top: 6px; background: #f0e0d0; border-radius: 4px; height: 6px; }
+.points-fill { height: 100%; border-radius: 4px; background: var(--accent); }
+.menu-list { margin: 0 12px; }
+.menu-item { background: #fff; border-radius: 12px; padding: 14px 16px; margin-bottom: 8px; display: flex; align-items: center; gap: 12px; box-shadow: var(--shadow2); border: 1px solid var(--border); cursor: pointer; }
+.menu-item-icon { font-size: 22px; }
+.menu-item-label { flex: 1; font-size: 14px; font-weight: 600; }
+.contact-card { margin: 12px; background: #fff; border-radius: var(--radius); padding: 16px; box-shadow: var(--shadow2); border: 1px solid var(--border); }
+.contact-title { font-size: 15px; font-weight: 700; margin-bottom: 12px; }
+.contact-row { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--border); }
+.contact-row:last-child { border-bottom: none; }
+.contact-icon { font-size: 18px; width: 28px; text-align: center; }
+.contact-text { font-size: 13px; color: var(--text2); }
+.contact-link { color: var(--primary); text-decoration: none; font-weight: 600; }
+.owner-section { padding: 12px; }
+.stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.stat-card { background: #fff; border-radius: var(--radius); padding: 14px; box-shadow: var(--shadow2); border: 1px solid var(--border); text-align: center; }
+.stat-val { font-size: 24px; font-weight: 800; color: var(--primary); }
+.stat-label { font-size: 11px; color: var(--text3); margin-top: 2px; }
+.owner-order-card { background: #fff; border-radius: var(--radius); padding: 14px; margin-bottom: 10px; box-shadow: var(--shadow2); border: 1px solid var(--border); }
+.owner-nav { display: flex; gap: 8px; margin-bottom: 14px; overflow-x: auto; scrollbar-width: none; padding-bottom: 4px; }
+.owner-nav::-webkit-scrollbar { display: none; }
+.owner-nav-btn { padding: 8px 16px; border-radius: 20px; border: 2px solid var(--border); background: #fff; font-family: 'Kanit', sans-serif; font-size: 13px; font-weight: 600; cursor: pointer; white-space: nowrap; color: var(--text2); }
+.owner-nav-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+.product-manage-card { background: #fff; border-radius: 12px; padding: 12px; margin-bottom: 8px; display: flex; align-items: center; gap: 10px; box-shadow: var(--shadow2); border: 1px solid var(--border); }
+.pm-img { width: 54px; height: 54px; border-radius: 10px; object-fit: cover; }
+.pm-info { flex: 1; }
+.pm-name { font-size: 13px; font-weight: 600; }
+.pm-price { font-size: 12px; color: var(--text3); }
+.toggle-switch { width: 44px; height: 24px; border-radius: 12px; background: #ccc; position: relative; cursor: pointer; flex-shrink: 0; transition: background 0.2s; }
+.toggle-switch.on { background: var(--success); }
+.toggle-knob { position: absolute; top: 2px; left: 2px; width: 20px; height: 20px; border-radius: 50%; background: #fff; transition: transform 0.2s; box-shadow: 0 1px 4px rgba(0,0,0,0.2); }
+.toggle-switch.on .toggle-knob { transform: translateX(20px); }
+.chart-bar-wrap { margin-top: 10px; }
+.chart-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.chart-label { width: 80px; font-size: 11px; color: var(--text2); text-align: right; }
+.chart-bar-bg { flex: 1; background: #f0e0d0; border-radius: 4px; height: 20px; }
+.chart-bar-fill { height: 100%; border-radius: 4px; background: linear-gradient(90deg, var(--primary), var(--accent)); display: flex; align-items: center; padding-left: 6px; }
+.chart-bar-val { font-size: 10px; color: #fff; font-weight: 700; }
+.toast { position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%) translateY(20px); background: rgba(30,20,10,0.92); color: #fff; padding: 10px 20px; border-radius: 20px; font-size: 13px; font-weight: 600; white-space: nowrap; opacity: 0; transition: all 0.3s; z-index: 1000; pointer-events: none; }
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+.success-modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 600; align-items: center; justify-content: center; }
+.success-modal.open { display: flex; }
+.success-card { background: #fff; border-radius: 24px; padding: 32px 24px; text-align: center; max-width: 300px; width: 90%; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
+.success-icon { font-size: 56px; margin-bottom: 12px; }
+.success-title { font-size: 20px; font-weight: 800; color: var(--success); margin-bottom: 6px; }
+.success-sub { font-size: 14px; color: var(--text2); margin-bottom: 20px; }
+.success-ok-btn { width: 100%; background: var(--success); color: #fff; border: none; border-radius: 14px; padding: 12px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: 'Kanit', sans-serif; }
+.login-modal { display: none; position: fixed; inset: 0; background: linear-gradient(135deg, var(--primary-dark) 0%, #7b241c 100%); z-index: 700; flex-direction: column; align-items: center; justify-content: center; }
+.login-modal.open { display: flex; }
+.login-card { background: #fff; border-radius: 24px; padding: 32px 24px; width: 90%; max-width: 340px; box-shadow: 0 20px 60px rgba(0,0,0,0.4); }
+.login-logo { text-align: center; margin-bottom: 20px; }
+.login-logo img { width: 80px; height: 80px; border-radius: 50%; border: 3px solid var(--primary); }
+.login-title { text-align: center; font-size: 20px; font-weight: 800; color: var(--primary); margin-bottom: 4px; }
+.login-sub { text-align: center; font-size: 13px; color: var(--text3); margin-bottom: 24px; }
+.login-input-group { margin-bottom: 14px; }
+.login-label { font-size: 12px; font-weight: 600; color: var(--text2); display: block; margin-bottom: 6px; }
+.login-input { width: 100%; padding: 12px 14px; border: 1.5px solid var(--border); border-radius: 12px; font-size: 14px; font-family: 'Kanit', sans-serif; outline: none; }
+.login-input:focus { border-color: var(--primary); }
+.login-btn { width: 100%; padding: 13px; border-radius: 14px; background: var(--primary); color: #fff; border: none; font-size: 16px; font-weight: 700; cursor: pointer; font-family: 'Kanit', sans-serif; margin-bottom: 12px; }
+.login-guest-btn { width: 100%; padding: 12px; border-radius: 14px; background: #fff; color: var(--text2); border: 1.5px solid var(--border); font-size: 14px; font-weight: 600; cursor: pointer; font-family: 'Kanit', sans-serif; }
+.login-switch { text-align: center; margin-top: 12px; font-size: 13px; color: var(--text3); }
+.login-switch a { color: var(--primary); font-weight: 600; cursor: pointer; }
+.search-wrap { position: relative; padding: 10px 12px; }
+.search-icon { position: absolute; left: 22px; top: 50%; transform: translateY(-50%); font-size: 16px; color: var(--text3); pointer-events: none; }
+.search-input { width: 100%; padding: 10px 14px 10px 38px; border: 1.5px solid var(--border); border-radius: 12px; font-size: 14px; font-family: 'Kanit', sans-serif; background: #fff; outline: none; color: var(--text); }
+.search-input:focus { border-color: var(--primary); }
+.cat-scroll { display: flex; gap: 8px; padding: 0 12px 10px; overflow-x: auto; scrollbar-width: none; }
+.cat-scroll::-webkit-scrollbar { display: none; }
+.cat-btn { padding: 6px 14px; border-radius: 20px; border: 1.5px solid var(--border); background: #fff; font-family: 'Kanit', sans-serif; font-size: 12px; font-weight: 600; cursor: pointer; white-space: nowrap; color: var(--text2); flex-shrink: 0; }
+.cat-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+.promo-strip { margin: 0 12px 12px; background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%); border-radius: 12px; padding: 10px 14px; display: flex; align-items: center; gap: 10px; color: #fff; }
+.promo-strip-icon { font-size: 24px; }
+.promo-strip-text { font-size: 12px; font-weight: 600; }
+.promo-strip-title { font-size: 14px; font-weight: 800; }
+.ai-card { margin: 0 12px 12px; background: linear-gradient(135deg, #2c3e50 0%, #3d5166 100%); border-radius: 12px; padding: 12px 14px; color: #fff; }
+.ai-card-title { font-size: 13px; font-weight: 700; margin-bottom: 8px; display: flex; gap: 6px; align-items: center; }
+.ai-chips { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; }
+.ai-chip { background: rgba(255,255,255,0.15); border-radius: 8px; padding: 6px 10px; font-size: 11px; white-space: nowrap; flex-shrink: 0; border: 1px solid rgba(255,255,255,0.2); }
+
+/* Bulk order card on product */
+.bulk-order-btn { width: 100%; margin-top: 4px; background: linear-gradient(90deg, #f39c12, #e67e22); color: #fff; border: none; border-radius: 10px; padding: 6px; font-size: 11px; font-weight: 700; cursor: pointer; font-family: 'Kanit', sans-serif; }
+/* Product Edit Modal */
+.prod-modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.55); z-index:600; align-items:flex-end; justify-content:center; }
+.prod-modal.open { display:flex; }
+.prod-sheet { background:#fff; width:100%; max-width:430px; border-radius:24px 24px 0 0; padding:20px 16px 32px; max-height:90vh; overflow-y:auto; }
+/* Owner separate UI */
+.owner-top-nav { background:linear-gradient(135deg,#2c3e50,#3d5166); padding:14px 16px 12px; display:flex; align-items:center; gap:10px; position:sticky; top:0; z-index:100; }
+.owner-top-nav-logo { width:38px; height:38px; border-radius:50%; object-fit:cover; border:2px solid rgba(255,255,255,0.5); }
+.owner-top-title { color:#fff; font-size:17px; font-weight:700; flex:1; }
+.owner-tabs { display:flex; background:#f5f5f5; border-bottom:1px solid var(--border); }
+.owner-tab { flex:1; padding:11px 4px; border:none; background:none; font-family:Kanit,sans-serif; font-size:12px; font-weight:600; color:var(--text3); cursor:pointer; border-bottom:3px solid transparent; transition:all .2s; }
+.owner-tab.active { color:var(--primary); border-bottom-color:var(--primary); background:#fff; }
+/* Member card */
+.member-card { background:#fff; border-radius:14px; padding:14px; margin-bottom:10px; box-shadow:var(--shadow2); border:1px solid var(--border); }
+.member-avatar { width:44px; height:44px; border-radius:50%; background:linear-gradient(135deg,var(--primary),var(--accent)); display:flex; align-items:center; justify-content:center; color:#fff; font-size:18px; font-weight:700; flex-shrink:0; }
+/* Register screen */
+.register-screen { display:none; position:fixed; inset:0; background:linear-gradient(135deg,#922b21,#7b241c); z-index:650; flex-direction:column; align-items:center; justify-content:center; }
+.register-screen.open { display:flex; }
+.register-card { background:#fff; border-radius:24px; padding:28px 22px; width:92%; max-width:340px; max-height:90vh; overflow-y:auto; }
+.distance-badge { display:inline-block; font-size:11px; padding:3px 8px; border-radius:8px; margin-top:6px; font-weight:600; }
+.distance-ok { background:#d1e7dd; color:#0f5132; }
+.distance-warn { background:#fff3cd; color:#856404; }
+.distance-over { background:#f8d7da; color:#842029; }
+.flash-product-badge { position:absolute; top:8px; right:8px; background:linear-gradient(135deg,#e67e22,#f39c12); color:#fff; font-size:9px; font-weight:800; padding:3px 7px; border-radius:6px; animation:flashPulse 1s infinite; }
+@keyframes flashPulse { 0%,100%{opacity:1;} 50%{opacity:0.7;} }
+.min-order-bar { margin:0 12px 10px; background:#fff3cd; border:1px solid #ffc107; border-radius:12px; padding:10px 14px; display:flex; align-items:center; gap:10px; }
+.min-order-bar-icon { font-size:20px; }
+.min-order-progress { flex:1; }
+.min-order-text { font-size:12px; color:#856404; font-weight:600; margin-bottom:4px; }
+.min-order-bar-bg { background:#e0c040; border-radius:4px; height:6px; }
+.min-order-bar-fill { height:100%; border-radius:4px; background:#856404; transition:width .3s; }
+.gift-banner { margin:0 12px 8px; background:linear-gradient(135deg,#27ae60,#2ecc71); border-radius:12px; padding:10px 14px; color:#fff; display:none; }
+.gift-banner-title { font-size:13px; font-weight:800; }
+.gift-banner-sub { font-size:11px; opacity:.9; }
+
+/* PWA Install Banner */
+#pwa-install-banner {
+  display: none;
+  position: fixed;
+  top: 0; left: 50%; transform: translateX(-50%);
+  width: 100%; max-width: 430px;
+  background: linear-gradient(135deg, #c0392b 0%, #922b21 100%);
+  color: #fff;
+  padding: 14px 16px;
+  z-index: 9999;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+  animation: slideDown 0.4s ease;
+}
+@keyframes slideDown {
+  from { transform: translateX(-50%) translateY(-100%); }
+  to { transform: translateX(-50%) translateY(0); }
+}
+#pwa-install-banner .banner-inner {
+  display: flex; align-items: center; gap: 12px;
+}
+#pwa-install-banner .banner-icon {
+  width: 48px; height: 48px;
+  border-radius: 12px; object-fit: cover;
+  flex-shrink: 0;
+  border: 2px solid rgba(255,255,255,0.5);
+}
+#pwa-install-banner .banner-text { flex: 1; }
+#pwa-install-banner .banner-title {
+  font-size: 15px; font-weight: 800; margin-bottom: 2px;
+}
+#pwa-install-banner .banner-sub {
+  font-size: 11px; opacity: 0.85;
+}
+#pwa-install-banner .banner-install-btn {
+  background: #fff; color: #c0392b;
+  border: none; border-radius: 20px;
+  padding: 8px 16px; font-size: 13px; font-weight: 800;
+  cursor: pointer; font-family: 'Kanit', sans-serif;
+  white-space: nowrap; flex-shrink: 0;
+}
+#pwa-install-banner .banner-close-btn {
+  background: none; border: none; color: rgba(255,255,255,0.7);
+  font-size: 20px; cursor: pointer; padding: 0 4px; flex-shrink: 0;
+}
+
+</style>
+</head>
+<body>
+
+
+<!-- PWA INSTALL BANNER -->
+<div id="pwa-install-banner">
+  <div class="banner-inner">
+    <img class="banner-icon" id="bannerIcon" src="" alt="จุ้ย เดลิเวอรี่">
+    <div class="banner-text">
+      <div class="banner-title">📲 ติดตั้งแอปเลย!</div>
+      <div class="banner-sub">จุ้ย เดลิเวอรี่ — ใช้งานได้เหมือนแอปจริง</div>
+    </div>
+    <button class="banner-install-btn" id="installBtn" onclick="triggerInstall()">ติดตั้ง</button>
+    <button class="banner-close-btn" onclick="hidePWABanner()">✕</button>
+  </div>
+</div>
+
+<!-- REGISTER SCREEN -->
+<div class="register-screen" id="registerScreen">
+  <div class="register-card">
+    <div style="text-align:center;margin-bottom:16px;">
+      <img id="regLogoImg" style="width:70px;height:70px;border-radius:50%;border:3px solid var(--primary);">
+    </div>
+    <div style="text-align:center;font-size:19px;font-weight:800;color:var(--primary);margin-bottom:2px;">สมัครสมาชิก</div>
+    <div style="text-align:center;font-size:12px;color:var(--text3);margin-bottom:18px;">จุ้ย เบเกอรี่ — ได้รับสิทธิพิเศษทันที</div>
+    <div style="margin-bottom:10px;"><label style="font-size:12px;font-weight:600;color:var(--text2);display:block;margin-bottom:5px;">ชื่อ-นามสกุล *</label><input class="login-input" id="regName" placeholder="กรอกชื่อ-นามสกุล"></div>
+    <div style="margin-bottom:10px;"><label style="font-size:12px;font-weight:600;color:var(--text2);display:block;margin-bottom:5px;">เบอร์โทรศัพท์ *</label><input class="login-input" id="regPhone" placeholder="0XX-XXX-XXXX" type="tel"></div>
+    <div style="margin-bottom:10px;"><label style="font-size:12px;font-weight:600;color:var(--text2);display:block;margin-bottom:5px;">ชื่อผู้ใช้ *</label><input class="login-input" id="regUser" placeholder="ตั้งชื่อผู้ใช้"></div>
+    <div style="margin-bottom:10px;"><label style="font-size:12px;font-weight:600;color:var(--text2);display:block;margin-bottom:5px;">รหัสผ่าน *</label><input class="login-input" type="password" id="regPass" placeholder="ตั้งรหัสผ่าน"></div>
+    <div style="margin-bottom:16px;"><label style="font-size:12px;font-weight:600;color:var(--text2);display:block;margin-bottom:5px;">ที่อยู่จัดส่งประจำ</label><textarea class="login-input" id="regAddr" placeholder="บ้านเลขที่ ถนน ตำบล อำเภอ" style="min-height:56px;resize:none;"></textarea></div>
+    <button class="login-btn" onclick="doRegister()">✅ สมัครสมาชิก</button>
+    <button class="login-guest-btn" onclick="closeRegister()" style="margin-top:8px;">← กลับเข้าสู่ระบบ</button>
+  </div>
+</div>
+
+<!-- LOGIN MODAL -->
+<div class="login-modal open" id="loginModal">
+  <div class="login-card">
+    <div class="login-logo"><img src="data:image/jpeg;base64,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" alt="Logo"></div>
+    <div class="login-title">จุ้ย เบเกอรี่</div>
+    <div class="login-sub" id="loginSubtext">เข้าสู่ระบบเพื่อสั่งขนมสดๆ ทุกวัน</div>
+    <div class="login-input-group">
+      <label class="login-label">ชื่อผู้ใช้</label>
+      <input class="login-input" id="loginUser" placeholder="กรอกชื่อผู้ใช้">
+    </div>
+    <div class="login-input-group">
+      <label class="login-label">รหัสผ่าน</label>
+      <input class="login-input" type="password" id="loginPass" placeholder="กรอกรหัสผ่าน">
+    </div>
+    <button class="login-btn" onclick="doLogin()">เข้าสู่ระบบ</button>
+    <button class="login-guest-btn" onclick="guestLogin()">ใช้งานเป็นแขก (ลูกค้า)</button>
+    <div class="login-switch">เจ้าของร้าน? <a onclick="ownerLogin()">เข้าสู่ระบบแบบเจ้าของร้าน</a></div>
+    <div class="login-switch" style="margin-top:8px;">ยังไม่มีบัญชี? <a onclick="openRegister()">สมัครสมาชิกฟรี</a></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<div class="success-modal" id="successModal">
+  <div class="success-card">
+    <div class="success-icon">🎉</div>
+    <div class="success-title">สั่งสำเร็จ!</div>
+    <div class="success-sub" id="successSub">ร้านได้รับออเดอร์แล้ว!</div>
+    <button class="success-ok-btn" onclick="closeSuccess()">ดูสถานะออเดอร์</button>
+  </div>
+</div>
+
+<!-- OPTIONS MODAL (for fried bread) -->
+<div class="modal-overlay" id="optionsModal" onclick="closeOptionsModal(event)">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="optionsTitle">เลือกไส้</div>
+    <div id="optionsList"></div>
+    <button class="modal-confirm-btn" onclick="confirmOptions()">เพิ่มลงตะกร้า</button>
+  </div>
+</div>
+
+<!-- BULK ORDER MODAL -->
+<div class="bulk-modal" id="bulkModal" onclick="closeBulkModal(event)">
+  <div class="bulk-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="bulkTitle">สั่งจำนวนมาก (พรีออเดอร์)</div>
+    
+    <div class="bulk-banner">
+      <div class="bulk-banner-title">🎁 โปรสั่งจำนวนเยอะ</div>
+      <div class="bulk-banner-sub">ต้องสั่งล่วงหน้าอย่างน้อย 1 วัน • <strong>ฟรีค่าส่ง!</strong> 🚚</div>
+    </div>
+
+    <div class="bulk-promo-box">
+      <div class="bulk-promo-title">🎀 เงื่อนไขของแถม</div>
+      <div id="bulkPromoDesc"></div>
+    </div>
+
+    <div class="bulk-warning">
+      <span>⚠️</span>
+      <span>สินค้าชิ้นนี้ต้องสั่งล่วงหน้า <strong>อย่างน้อย 1 วัน</strong> เพื่อให้ร้านเตรียมได้ทัน</span>
+    </div>
+
+    <label class="input-label" style="margin-top:12px;">📅 วันที่รับสินค้า (ต้องเป็นพรุ่งนี้ขึ้นไป)</label>
+    <input class="input-field" type="date" id="bulkDate" style="margin-bottom:8px;" onchange="updateBulkCalc()">
+
+    <label class="input-label">⏰ เวลาที่ต้องการรับ/จัดส่ง</label>
+    <input class="input-field" type="time" id="bulkTime" value="10:00" style="margin-bottom:12px;">
+
+    <label class="input-label">จำนวนที่ต้องการ (ชิ้น)</label>
+    <div class="bulk-input-row">
+      <button class="qty-btn" style="width:40px;height:40px;" onclick="changeBulkQty(-10)">−10</button>
+      <button class="qty-btn" style="width:36px;height:40px;" onclick="changeBulkQty(-1)">−</button>
+      <input class="bulk-input" type="number" id="bulkQtyInput" value="10" min="1" oninput="updateBulkCalc()">
+      <button class="qty-btn" style="width:36px;height:40px;" onclick="changeBulkQty(1)">+</button>
+      <button class="qty-btn" style="width:40px;height:40px;" onclick="changeBulkQty(10)">+10</button>
+    </div>
+
+    <div class="bulk-summary" id="bulkSummary"></div>
+
+    <button class="modal-confirm-btn" onclick="confirmBulkOrder()">✅ เพิ่มลงตะกร้า (พรีออเดอร์)</button>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div id="app" style="display:none;">
+<div class="topbar">
+  <img class="topbar-logo" src="data:image/jpeg;base64,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" alt="Logo">
+  <div>
+    <div class="topbar-title">จุ้ย เบเกอรี่</div>
+    <span class="topbar-sub" id="topbarSub">ยินดีต้อนรับ!</span>
+  </div>
+  <button class="topbar-cart-btn" onclick="showScreen('cart')">
+    🛒<span class="cart-badge" id="cartBadge">0</span>
+  </button>
+</div>
+
+<!-- HOME -->
+<div class="screen active" id="screen-home">
+  <div class="hero-banner" id="heroBanner">
+    <h2>ขนมสดใหม่ทุกวัน 🥐</h2>
+    <p>อร่อยเต็มคำ ราคาถูกใจ ส่งตรงถึงบ้าน</p>
+    <div class="hero-promo-tags">
+      <span class="promo-tag" id="shopStatusTag">🟢 ร้านเปิด 08:00-20:00</span>
+      <span class="promo-tag">🛒 สั่งขั้นต่ำ 50 บาท</span>
+      <span class="promo-tag" id="flashTag" style="display:none;">⚡ Flash Sale!</span>
+    </div>
+  </div>
+  <!-- SHOP CLOSED BANNER -->
+  <div id="shopClosedBanner" style="display:none;background:#922b21;color:#fff;text-align:center;padding:14px 16px;font-size:14px;font-weight:700;">
+    🔴 ร้านปิดแล้ว — เปิดใหม่พรุ่งนี้ เวลา 08:00 น.
+  </div>
+  <!-- FLASH SALE BANNER -->
+  <div id="flashSaleBanner" style="display:none;background:linear-gradient(90deg,#e67e22,#f39c12);color:#fff;padding:10px 16px;text-align:center;">
+    <div style="font-size:15px;font-weight:800;">⚡ Flash Sale 14:00–16:00 ⚡</div>
+    <div style="font-size:12px;margin-top:2px;" id="flashCountdown"></div>
+  </div>
+
+  <div class="promo-strip" style="margin-top:12px;" id="promoStrip">
+    <div class="promo-strip-icon">🎁</div>
+    <div>
+      <div class="promo-strip-title" id="promoTitle">สั่งครบแถมฟรี!</div>
+      <div class="promo-strip-text" id="promoText2">ส่งฟรี ≤3กม. | เกิน 3กม. คิดกม.ละ 10฿ | ครบ 50฿ แถมเอแคลร์ฟรี!</div>
+    </div>
+  </div>
+
+  <div class="search-wrap">
+    <span class="search-icon">🔍</span>
+    <input class="search-input" placeholder="ค้นหาขนม..." oninput="filterProducts(this.value)" id="searchBox">
+  </div>
+
+  <div class="cat-scroll" id="catScroll">
+    <button class="cat-btn active" onclick="setCat('all',this)">ทั้งหมด</button>
+    <button class="cat-btn" onclick="setCat('price5',this)">💛 5 บาท</button>
+    <button class="cat-btn" onclick="setCat('price10',this)">❤️ 10 บาท</button>
+    <button class="cat-btn" onclick="setCat('donut',this)">🍩 โดนัท</button>
+    <button class="cat-btn" onclick="setCat('bread',this)">🍞 ขนมปัง</button>
+    <button class="cat-btn" onclick="setCat('cake',this)">🎂 เค้ก</button>
+    <button class="cat-btn" onclick="setCat('brownie',this)">🍫 บราวนี่</button>
+    <button class="cat-btn" onclick="setCat('other',this)">✨ อื่นๆ</button>
+  </div>
+
+  <div class="ai-card">
+    <div class="ai-card-title">🤖 แนะนำสำหรับคุณ</div>
+    <div class="ai-chips" id="aiChips"></div>
+  </div>
+
+  <div class="section-label">เมนูทั้งหมด</div>
+  <div class="products-grid" id="productsGrid"></div>
+  <div style="height:16px;"></div>
+</div>
+
+<!-- CART -->
+<div class="screen" id="screen-cart">
+  <div style="padding:14px 16px 8px; font-size:18px; font-weight:800;">🛒 ตะกร้าสินค้า</div>
+  <div id="cartContent"></div>
+</div>
+
+<!-- ORDERS -->
+<div class="screen" id="screen-orders">
+  <div style="padding:14px 16px 8px; font-size:18px; font-weight:800;">📦 ติดตามออเดอร์</div>
+  <div class="orders-list" id="ordersList"></div>
+</div>
+
+<!-- PROFILE -->
+<div class="screen" id="screen-profile">
+  <div class="profile-header">
+    <div class="profile-avatar">👤</div>
+    <div class="profile-name" id="profileName">แขก</div>
+    <div class="profile-points" id="profileSub">สมาชิกทั่วไป</div>
+  </div>
+  <div class="points-card">
+    <div class="points-icon">⭐</div>
+    <div class="points-info">
+      <div class="points-val" id="pointsVal">0 แต้ม</div>
+      <div class="points-label">อีก 500 แต้ม รับส่วนลด 20 บาท</div>
+      <div class="points-progress"><div class="points-fill" id="pointsFill" style="width:0%"></div></div>
+    </div>
+  </div>
+  <div class="menu-list">
+    <div class="menu-item"><span class="menu-item-icon">🎟️</span><span class="menu-item-label">คูปองส่วนลด</span><span>›</span></div>
+    <div class="menu-item"><span class="menu-item-icon">📋</span><span class="menu-item-label">ประวัติการสั่งซื้อ</span><span>›</span></div>
+    <div class="menu-item" onclick="logout()"><span class="menu-item-icon">🚪</span><span class="menu-item-label">ออกจากระบบ</span><span>›</span></div>
+  </div>
+  <div class="contact-card">
+    <div class="contact-title">📞 ติดต่อร้าน</div>
+    <div class="contact-row"><span class="contact-icon">📱</span><span class="contact-text"><a class="contact-link" href="tel:0969035330">096-903-5330</a></span></div>
+    <div class="contact-row"><span class="contact-icon">📘</span><span class="contact-text"><a class="contact-link" href="https://facebook.com" target="_blank">จุ้ย เบเกอรี่ (Facebook)</a></span></div>
+    <div class="contact-row"><span class="contact-icon">💬</span><span class="contact-text"><a class="contact-link" href="https://line.me/ti/p/BSYIT37000" target="_blank">LINE: BSYIT37000</a></span></div>
+    <div class="contact-row"><span class="contact-icon">📩</span><span class="contact-text"><a class="contact-link" href="https://m.me/juicebakery" target="_blank">Messenger จุ้ย เบเกอรี่</a></span></div>
+  </div>
+</div>
+
+<!-- OWNER -->
+<div class="screen" id="screen-owner">
+  <div class="owner-section">
+    <div id="ownerContent"></div>
+  </div>
+</div>
+
+<!-- Customer bottom nav -->
+<div class="bottom-nav" id="customerNav">
+  <button class="nav-btn active" onclick="showScreen('home')" id="nav-home"><span class="nav-icon">🏠</span><span>หน้าหลัก</span></button>
+  <button class="nav-btn" onclick="showScreen('cart')" id="nav-cart"><span class="nav-icon">🛒</span><span>ตะกร้า</span></button>
+  <button class="nav-btn" onclick="showScreen('orders')" id="nav-orders"><span class="nav-icon">📦</span><span>ออเดอร์</span></button>
+  <button class="nav-btn" onclick="showScreen('profile')" id="nav-profile"><span class="nav-icon">👤</span><span>โปรไฟล์</span></button>
+</div>
+<!-- Owner bottom nav (separate) -->
+<div class="bottom-nav" id="ownerNav" style="display:none;">
+  <button class="nav-btn active" onclick="ownerTab2('dashboard',this)" id="onav-dashboard"><span class="nav-icon">📊</span><span>ภาพรวม</span></button>
+  <button class="nav-btn" onclick="ownerTab2('orders',this)" id="onav-orders"><span class="nav-icon">📋</span><span>ออเดอร์</span></button>
+  <button class="nav-btn" onclick="ownerTab2('products',this)" id="onav-products"><span class="nav-icon">🛒</span><span>สินค้า</span></button>
+  <button class="nav-btn" onclick="ownerTab2('members',this)" id="onav-members"><span class="nav-icon">👥</span><span>สมาชิก</span></button>
+  <button class="nav-btn" onclick="ownerTab2('report',this)" id="onav-report"><span class="nav-icon">📈</span><span>รายงาน</span></button>
+</div>
+</div>
+
+<script src="images.js">
+// Register Service Worker
+if('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js').catch(()=>{});
+  });
+}
+</script>
+<script>
+// IMGS loaded from images.js
+
+// PRODUCTS - pizza_bread moved to 'bread' category, coconut_cake removed from cake
+const PRODUCTS = [
+  // 5 baht items
+  { id:1, name:'เอแคลร์', price:5, cat:'other', img:IMGS.eclair, desc:'แป้งกรอบ ไส้ครีม', stock:50, badge:'⭐ขายดี' },
+  { id:6, name:'โดนัทเนยน้ำตาล', price:5, cat:'donut', img:IMGS.sugar_donut, desc:'โดนัทนุ่ม คลุกน้ำตาลทราย', stock:60, badge:'⭐ขายดี' },
+  { id:8, name:'โดนัทไส้', price:5, cat:'donut', img:IMGS.filled_donut, desc:'ไส้ครีมวานิลลา นุ่มฟู', stock:50, badge:'' },
+  { id:10, name:'โดนัทช็อคโกแลต', price:5, cat:'donut', img:IMGS.choc_donut, desc:'เคลือบช็อกโกแลต โรยหน้า', stock:55, badge:'' },
+  { id:9, name:'ขนมปังทอด', price:5, cat:'bread', img:IMGS.fried_bread, desc:'หลายไส้ให้เลือก', stock:80, badge:'⭐ขายดี', hasOptions:true, options:['หมูหยอง','สปรด','ฮอทดอก','พิซซ่า','แกงกะหรี่ไก่'] },
+  { id:11, name:'ขนมปังไส้สปรด', price:5, cat:'bread', img:IMGS.pineapple_bread, desc:'ไส้สปรดหอมหวาน นุ่มฟู', stock:35, badge:'' },
+  { id:12, name:'ขนมปังไส้สังขยาใบเตย', price:5, cat:'bread', img:IMGS.pandanus_bread, desc:'สังขยาใบเตยหอม เนื้อนุ่ม', stock:30, badge:'' },
+  { id:19, name:'ขนมปังฮอทดอกมายองเนสซอสพริก', price:5, cat:'bread', img:IMGS.hotdog_bread, desc:'ฮอทดอก มายองเนส ซอสพริก', stock:40, badge:'🆕ใหม่' },
+  { id:20, name:'ขนมปังหมูหยองมายองเนส', price:5, cat:'bread', img:IMGS.pork_mayo_bread, desc:'หมูหยองกรอบ มายองเนสหอม', stock:35, badge:'🆕ใหม่' },
+  { id:21, name:'ขนมปังฮอทดอกมายองเนส', price:5, cat:'bread', img:IMGS.hotdog_mayo_bread, desc:'ฮอทดอก ชีสละลาย มายองเนส', stock:35, badge:'' },
+  { id:22, name:'ขนมปังไส้มะพร้าว', price:5, cat:'bread', img:IMGS.coconut_bread, desc:'ไส้มะพร้าวหอมหวาน', stock:30, badge:'' },
+  { id:23, name:'ขนมปังเนยน้ำตาล', price:5, cat:'bread', img:IMGS.sugar_bread, desc:'เนยหอม น้ำตาลทรายกรุบกรอบ', stock:45, badge:'' },
+  { id:24, name:'ขนมปังไส้เผือก', price:5, cat:'bread', img:IMGS.butter_bread, desc:'ไส้เผือกนุ่มหวาน', stock:30, badge:'' },
+  { id:25, name:'เค้กกล้วยหอม', price:5, cat:'cake', img:IMGS.banana_cake, desc:'กล้วยหอมแท้ นุ่มชุ่มฉ่ำ', stock:40, badge:'' },
+  { id:26, name:'ปุยฝ้าย', price:5, cat:'other', img:IMGS.cotton_cake, desc:'หลากสี นุ่มฟู หวานน้อย', stock:50, badge:'🆕ใหม่' },
+  { id:27, name:'แยมโรล (เล็ก)', price:5, cat:'other', img:IMGS.jam_roll, desc:'โรลเค้กนุ่ม ไส้แยมหอม', stock:40, badge:'' },
+  // 10 baht items
+  { id:2, name:'เค้กหน้านิ่มสตรอว์เบอร์รี่', price:10, cat:'cake', img:IMGS.strawberry_cake, desc:'หน้านิ่ม รสสตรอว์เบอร์รี่', stock:30, badge:'' },
+  { id:3, name:'ขนมปังพริกเผาหมูหยอง', price:10, cat:'bread', img:IMGS.chili_pork_bread, desc:'พริกเผาหอม หมูหยองกรอบ', stock:40, badge:'🆕ใหม่' },
+  { id:4, name:'เค้กหน้านิ่มนมสดฮอกไกโด', price:10, cat:'cake', img:IMGS.hokkaido_cake, desc:'นมสดฮอกไกโด หอมมัน', stock:25, badge:'' },
+  { id:5, name:'เค้กหน้านิ่มฝอยทอง', price:10, cat:'cake', img:IMGS.foythong_cake, desc:'ฝอยทองแท้ หอมหวาน', stock:20, badge:'⭐ขายดี' },
+  { id:7, name:'บราวนี่หน้ากรอบ', price:10, cat:'brownie', img:IMGS.crispy_brownie, desc:'ช็อกโกแลตเข้มข้น หน้ากรอบ', stock:45, badge:'' },
+  { id:13, name:'เค้กหน้านิ่มส้ม', price:10, cat:'cake', img:IMGS.orange_cake, desc:'รสส้มสดชื่น หน้านุ่ม', stock:20, badge:'🆕ใหม่' },
+  { id:14, name:'เค้กหน้านิ่มช็อคโกแลต', price:10, cat:'cake', img:IMGS.choc_cake, desc:'ช็อกโกแลตเข้มข้น', stock:25, badge:'' },
+  { id:15, name:'บราวนี่', price:10, cat:'brownie', img:IMGS.brownie, desc:'ช็อกโกแลตแท้ โรยเม็ดมะม่วง', stock:40, badge:'⭐ขายดี' },
+  { id:16, name:'ขนมปังไส้ลูกเกด', price:10, cat:'bread', img:IMGS.raisin_bread, desc:'ลูกเกดแน่นๆ เนื้อนุ่ม', stock:30, badge:'' },
+  { id:18, name:'เค้กหน้านิ่มลอดช่อง', price:10, cat:'cake', img:IMGS.pizza_bread, desc:'ลอดช่องสด กะทิสด หอมหวาน', stock:45, badge:'🆕ใหม่' },
+  { id:28, name:'ปังพิซซ่า', price:10, cat:'bread', img:IMGS.coconut_cake, desc:'ชีสเย้ิมๆ อบสดใหม่ทุกวัน', stock:35, badge:'⭐ขายดี' },
+  { id:29, name:'เค้กหน้านิ่มมะพร้าว', price:10, cat:'cake', img:IMGS.coconut_cake2||IMGS.coconut_cake, desc:'กะทิสด หอมมัน หวานกลมกล่อม', stock:25, badge:'🆕ใหม่' },
+  { id:30, name:'แยมโรล (ใหญ่)', price:10, cat:'other', img:IMGS.jam_roll, desc:'โรลเค้กนุ่มใหญ่ ไส้แยมเข้มข้น', stock:30, badge:'' },
+];
+
+let cart = [];
+let orders = JSON.parse(localStorage.getItem('juiceBakeryOrders')||'[]');
+let currentUser = null;
+let isOwner = false;
+let currentCat = 'all';
+let currentOrderItem = null;
+let selectedOptions = [];
+let points = 0;
+let ownerCurrentTab = 'dashboard';
+let stockState = {};
+PRODUCTS.forEach(p => { stockState[p.id] = { available: true, qty: p.stock }; });
+
+// Bulk order state
+let bulkProduct = null;
+
+function showScreen(name) {
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('screen-'+name).classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  const nb = document.getElementById('nav-'+name);
+  if(nb) nb.classList.add('active');
+  if(name==='cart') renderCart();
+  if(name==='orders') renderOrders();
+  if(name==='owner') renderOwner(ownerCurrentTab);
+  if(name==='profile') renderProfile();
+  window.scrollTo(0,0);
+}
+
+function doLogin() {
+  const u = document.getElementById('loginUser').value.trim();
+  const p = document.getElementById('loginPass').value.trim();
+  if(!u) { showToast('กรุณากรอกชื่อผู้ใช้'); return; }
+  currentUser = u;
+  isOwner = (u==='admin' && p==='1234') || (u==='owner');
+  finishLogin();
+}
+function ownerLogin() {
+  document.getElementById('loginSubtext').textContent = 'เจ้าของร้าน: ชื่อ "admin" รหัส "1234"';
+  document.getElementById('loginUser').value = 'admin';
+  document.getElementById('loginPass').value = '1234';
+}
+function guestLogin() { currentUser='แขก'; isOwner=false; finishLogin(); }
+function finishLogin() {
+  document.getElementById('loginModal').classList.remove('open');
+  document.getElementById('app').style.display='block';
+  document.getElementById('topbarSub').textContent='สวัสดี, '+currentUser+'!';
+  if(isOwner) {
+    document.getElementById('customerNav').style.display='none';
+    document.getElementById('ownerNav').style.display='flex';
+    document.getElementById('topbar').style.background='linear-gradient(135deg,#2c3e50,#3d5166)';
+    showScreen('owner');
+    ownerCurrentTab='dashboard';
+    renderOwner('dashboard');
+    showToast('ยินดีต้อนรับเจ้าของร้าน!');
+  } else {
+    document.getElementById('customerNav').style.display='flex';
+    document.getElementById('ownerNav').style.display='none';
+    renderProducts(); updateAiCard(); showToast('ยินดีต้อนรับ '+currentUser+'!');
+  }
+}
+function logout() {
+  currentUser=null; isOwner=false; cart=[];
+  document.getElementById('app').style.display='none';
+  document.getElementById('loginModal').classList.add('open');
+  document.getElementById('loginUser').value='';
+  document.getElementById('loginPass').value='';
+  document.getElementById('customerNav').style.display='flex';
+  document.getElementById('ownerNav').style.display='none';
+  document.getElementById('topbar').style.background='';
+  updateCartBadge();
+}
+
+// ===== SHOP HOURS =====
+const SHOP_OPEN = 8, SHOP_CLOSE = 20;
+function isShopOpen() {
+  const now = new Date();
+  const h = now.getHours() + now.getMinutes()/60;
+  return h >= SHOP_OPEN && h < SHOP_CLOSE;
+}
+
+// ===== FLASH SALE 14:00-16:00 =====
+const FLASH_START = 14, FLASH_END = 16;
+const FLASH_DISCOUNT = 0.5; // 50% off
+function isFlashSale() {
+  const now = new Date();
+  const h = now.getHours() + now.getMinutes()/60;
+  return h >= FLASH_START && h < FLASH_END;
+}
+function getFlashPrice(p) {
+  return isFlashSale() ? Math.ceil(p * (1 - FLASH_DISCOUNT)) : p;
+}
+
+// ===== DISTANCE & DELIVERY =====
+function calcDistanceKm(lat1,lon1,lat2,lon2) {
+  const R=6371, dLat=(lat2-lat1)*Math.PI/180, dLon=(lon2-lon1)*Math.PI/180;
+  const a=Math.sin(dLat/2)**2+Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)**2;
+  return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
+}
+function calcDeliveryFee(km) {
+  if(!km||km<=0) return 0; // ยังไม่ได้ปักหมุด = ฟรีชั่วคราว
+  if(km<=3) return 0;      // 0-3 กม. ฟรี
+  return Math.ceil((km-3)*10); // เกิน 3 กม. คิด กม.ละ 10 บาท
+}
+
+// ===== MIN ORDER + GIFTS =====
+function calcGiftItems(subtotal) {
+  const gifts=[];
+  if(subtotal>=100) gifts.push('โดนัทฟรี 2 ชิ้น 🍩');
+  else if(subtotal>=50) gifts.push('เอแคลร์ฟรี 1 ชิ้น 🥐');
+  return gifts;
+}
+
+// ===== SHOP STATUS UI =====
+function updateShopUI() {
+  const open = isShopOpen();
+  const flash = isFlashSale();
+  const tag = document.getElementById('shopStatusTag');
+  const closedBanner = document.getElementById('shopClosedBanner');
+  const flashBanner = document.getElementById('flashSaleBanner');
+  const flashTag = document.getElementById('flashTag');
+  if(tag) tag.textContent = open ? '🟢 ร้านเปิด 08:00-20:00' : '🔴 ร้านปิด';
+  if(closedBanner) closedBanner.style.display = open ? 'none' : 'block';
+  if(flashBanner) flashBanner.style.display = (open && flash) ? 'block' : 'none';
+  if(flashTag) flashTag.style.display = (open && flash) ? 'inline-block' : 'none';
+  // Flash countdown
+  if(flash) {
+    const now=new Date(); const end=new Date(); end.setHours(FLASH_END,0,0,0);
+    const diff=Math.max(0,Math.floor((end-now)/1000));
+    const m=Math.floor(diff/60), s=diff%60;
+    const el=document.getElementById('flashCountdown');
+    if(el) el.textContent=`ลดราคา 50%! เหลือเวลา ${m} นาที ${s} วินาที`;
+  }
+}
+setInterval(updateShopUI, 1000);
+
+function renderProducts(filter='', cat='all') {
+  const grid = document.getElementById('productsGrid');
+  let prods = PRODUCTS.filter(p=>{
+    const matchCat = cat==='all' || p.cat===cat || (cat==='price5'&&p.price===5) || (cat==='price10'&&p.price===10);
+    const matchSearch = !filter || p.name.toLowerCase().includes(filter.toLowerCase());
+    return matchCat && matchSearch;
+  });
+  grid.innerHTML = prods.map(p=>{
+    const inCart = cart.find(c=>c.id===p.id&&!c.opts&&!c.bulk);
+    const qty = inCart ? inCart.qty : 0;
+    const avail = stockState[p.id].available;
+    return `<div class="product-card${!avail?' sold-out':''}">
+      ${p.badge?`<div class="product-badge">${p.badge}</div>`:''}
+      ${!avail?'<div class="sold-out-badge"><span class="sold-out-label">สินค้าหมด</span></div>':''}
+      <img class="product-img" src="${p.img}" alt="${p.name}" loading="lazy">
+      <div class="product-info">
+        <div class="product-name">${p.name}</div>
+        <div class="product-price">${p.price} บาท</div>
+        ${qty>0&&avail?`<div class="qty-row">
+          <button class="qty-btn" onclick="updateQty(${p.id},-1)">−</button>
+          <div class="qty-display">${qty}</div>
+          <button class="qty-btn" onclick="updateQty(${p.id},1)">+</button>
+        </div>`:`<button class="add-btn" ${!avail?'disabled':''} onclick="${p.hasOptions?`showOptions(${p.id})`:`addToCart(${p.id})`}">
+          ${avail?'+ เพิ่มลงตะกร้า':'สินค้าหมด'}
+        </button>`}
+        ${avail?`<button class="bulk-order-btn" onclick="showBulkModal(${p.id})">📦 สั่งจำนวนเยอะ (พรีออเดอร์)</button>`:''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function filterProducts(val) { renderProducts(val, currentCat); }
+function setCat(cat, btn) {
+  currentCat=cat;
+  document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderProducts(document.getElementById('searchBox').value, cat);
+}
+
+function updateAiCard() {
+  const recs = ['บราวนี่','เค้กหน้านิ่มมะพร้าว','โดนัทเนยน้ำตาล','เอแคลร์','ปุยฝ้าย','แยมโรล'];
+  document.getElementById('aiChips').innerHTML = recs.map(n=>`<div class="ai-chip">🍰 ${n}</div>`).join('');
+}
+
+// ===== BULK ORDER =====
+function showBulkModal(pid) {
+  bulkProduct = PRODUCTS.find(p=>p.id===pid);
+  if(!bulkProduct) return;
+  document.getElementById('bulkTitle').textContent = `📦 ${bulkProduct.name} — สั่งจำนวนมาก`;
+  
+  const freeAt = 100, freeQty = 10;
+  if(bulkProduct.price===5) {
+    document.getElementById('bulkPromoDesc').innerHTML = `<div>ชิ้นละ <strong>5 บาท</strong> — สั่ง <strong>${freeAt} ชิ้น</strong> แถมฟรี <strong>${freeQty} ชิ้น</strong></div>`;
+  } else {
+    document.getElementById('bulkPromoDesc').innerHTML = `<div>ชิ้นละ <strong>10 บาท</strong> — สั่ง <strong>${freeAt} ชิ้น</strong> แถมฟรี <strong>${freeQty} ชิ้น</strong></div>`;
+  }
+
+  // Set min date = tomorrow
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate()+1);
+  const minDate = tomorrow.toISOString().split('T')[0];
+  const dateInput = document.getElementById('bulkDate');
+  dateInput.min = minDate;
+  dateInput.value = minDate;
+
+  document.getElementById('bulkQtyInput').value = '10';
+  updateBulkCalc();
+  document.getElementById('bulkModal').classList.add('open');
+}
+
+function closeBulkModal(e) {
+  if(e.target===document.getElementById('bulkModal')) {
+    document.getElementById('bulkModal').classList.remove('open');
+  }
+}
+
+function changeBulkQty(delta) {
+  const inp = document.getElementById('bulkQtyInput');
+  let val = parseInt(inp.value)||1;
+  val = Math.max(1, val+delta);
+  inp.value = val;
+  updateBulkCalc();
+}
+
+function updateBulkCalc() {
+  if(!bulkProduct) return;
+  const qty = Math.max(1, parseInt(document.getElementById('bulkQtyInput').value)||1);
+  const price = bulkProduct.price;
+  const freeAt = 100, freeQty = 10;
+  
+  const sets = Math.floor(qty / freeAt);
+  const freeItems = sets * freeQty;
+  const subtotal = qty * price;
+  const totalItems = qty + freeItems;
+
+  let html = `<div class="bulk-row"><span>จำนวนที่สั่ง</span><span>${qty} ชิ้น</span></div>`;
+  if(freeItems>0) {
+    html += `<div class="bulk-row bulk-free-row"><span>🎁 ของแถมฟรี</span><span>+${freeItems} ชิ้น</span></div>`;
+    html += `<div class="bulk-row" style="color:var(--text3);font-size:12px;"><span>รวมทั้งหมดที่ได้รับ</span><span>${totalItems} ชิ้น</span></div>`;
+  } else {
+    html += `<div class="bulk-row" style="color:var(--text3);font-size:12px;"><span>สั่งครบ 100 ชิ้นแถม 10!</span><span>ขาดอีก ${freeAt - (qty%freeAt===0?freeAt:qty%freeAt)} ชิ้น</span></div>`;
+  }
+  html += `<div class="bulk-row bulk-total-row"><span>ราคารวม</span><span>${subtotal.toLocaleString()} บาท</span></div>`;
+  if(freeItems>0) {
+    const saved = freeItems * price;
+    html += `<div class="bulk-row" style="color:var(--success);font-size:12px;font-weight:600;"><span>💰 ประหยัดได้</span><span>${saved} บาท</span></div>`;
+  }
+  document.getElementById('bulkSummary').innerHTML = html;
+}
+
+function confirmBulkOrder() {
+  if(!bulkProduct) return;
+  const qty = Math.max(1, parseInt(document.getElementById('bulkQtyInput').value)||1);
+  const dateVal = document.getElementById('bulkDate').value;
+  if(!dateVal) { showToast('กรุณาเลือกวันรับสินค้า'); return; }
+  
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate()+1);
+  const selectedDate = new Date(dateVal);
+  if(selectedDate < tomorrow.setHours(0,0,0,0)) {
+    showToast('⚠️ ต้องสั่งล่วงหน้าอย่างน้อย 1 วัน');
+    return;
+  }
+
+  const bulkTimeVal = document.getElementById('bulkTime').value || '10:00';
+  const freeItems = Math.floor(qty/100)*10;
+  const key = bulkProduct.id+'-bulk-'+dateVal+'-'+bulkTimeVal;
+  const existing = cart.find(c=>c.key===key);
+  if(existing) { existing.qty+=qty; existing.freeItems=(existing.freeItems||0)+freeItems; }
+  else {
+    cart.push({
+      key, id:bulkProduct.id, name:bulkProduct.name,
+      price:bulkProduct.price, img:bulkProduct.img,
+      qty, freeItems, opts:'', bulk:true,
+      bulkDate:dateVal, bulkTime:bulkTimeVal
+    });
+  }
+  
+  document.getElementById('bulkModal').classList.remove('open');
+  updateCartBadge();
+  renderProducts(document.getElementById('searchBox').value, currentCat);
+  showToast(`เพิ่ม ${bulkProduct.name} ${qty} ชิ้น${freeItems>0?' (แถม '+freeItems+' ชิ้น)':''} แล้ว!`);
+}
+
+// ===== OPTIONS (fried bread) =====
+function showOptions(pid) {
+  const p = PRODUCTS.find(x=>x.id===pid);
+  if(!p) return;
+  currentOrderItem=pid; selectedOptions=[];
+  document.getElementById('optionsTitle').textContent='เลือกไส้: '+p.name;
+  document.getElementById('optionsList').innerHTML=p.options.map((o,i)=>`
+    <div class="option-item" onclick="toggleOption('${o}',this)">
+      <div class="option-check">✓</div>
+      <div class="option-label">${o}</div>
+    </div>`).join('');
+  document.getElementById('optionsModal').classList.add('open');
+}
+function toggleOption(opt,el) {
+  const check=el.querySelector('.option-check');
+  if(selectedOptions.includes(opt)) { selectedOptions=selectedOptions.filter(o=>o!==opt); check.classList.remove('checked'); }
+  else { selectedOptions.push(opt); check.classList.add('checked'); }
+}
+function closeOptionsModal(e) { if(e.target===document.getElementById('optionsModal')) document.getElementById('optionsModal').classList.remove('open'); }
+function confirmOptions() {
+  if(!selectedOptions.length) { showToast('กรุณาเลือกอย่างน้อย 1 ไส้'); return; }
+  addToCart(currentOrderItem, selectedOptions.join(', '));
+  document.getElementById('optionsModal').classList.remove('open');
+}
+
+function addToCart(pid, opts='') {
+  const p=PRODUCTS.find(x=>x.id===pid);
+  if(!p) return;
+  const actualPrice = isFlashSale() ? Math.ceil(p.price*0.5) : p.price;
+  const key=pid+'-'+opts+(isFlashSale()?'-flash':'');
+  const existing=cart.find(c=>c.key===key);
+  if(existing) existing.qty++;
+  else cart.push({key,id:pid,name:p.name+(isFlashSale()?' ⚡':''),price:actualPrice,img:p.img,qty:1,opts,bulk:false,originalPrice:p.price});
+  updateCartBadge();
+  renderProducts(document.getElementById('searchBox').value, currentCat);
+  showToast('เพิ่ม '+p.name+(opts?' ('+opts+')':'')+' ลงตะกร้าแล้ว');
+}
+function updateQty(pid, delta) {
+  const items=cart.filter(c=>c.id===pid&&!c.bulk);
+  if(!items.length) return;
+  const item=items[0]; item.qty+=delta;
+  if(item.qty<=0) cart=cart.filter(c=>c.key!==item.key);
+  updateCartBadge();
+  renderProducts(document.getElementById('searchBox').value, currentCat);
+}
+function updateCartBadge() {
+  const total=cart.reduce((s,c)=>s+c.qty,0);
+  const badge=document.getElementById('cartBadge');
+  badge.textContent=total;
+  badge.style.display=total>0?'flex':'none';
+}
+
+function renderCart() {
+  const el=document.getElementById('cartContent');
+  if(!cart.length) {
+    el.innerHTML=`<div class="cart-empty"><div class="empty-icon">🛒</div><p>ยังไม่มีสินค้าในตะกร้า</p></div>`;
+    return;
+  }
+  const subtotal=cart.reduce((s,c)=>s+c.price*c.qty,0);
+  const totalFree=cart.reduce((s,c)=>s+(c.freeItems||0),0);
+  const hasNormalItems=cart.some(c=>!c.bulk);
+  const distKm=window._lastDistance||0;
+  const delivery=hasNormalItems?calcDeliveryFee(distKm):0;
+  const deliveryNote=!window._lastDistance?'(ปักหมุดเพื่อคำนวณ)':distKm<=3?'ส่งฟรี ≤3กม.':'กม.ละ 10฿';
+  const total=subtotal+delivery;
+
+  const subtotalCheck=cart.reduce((s,c)=>s+c.price*c.qty,0);
+  const minOrderPct=Math.min(100,(subtotalCheck/50)*100);
+  const remainToMin=Math.max(0,50-subtotalCheck);
+  const giftItems=calcGiftItems(subtotalCheck);
+
+  let minBarHTML=`<div class="min-order-bar">
+    <div class="min-order-bar-icon">${subtotalCheck>=50?'✅':'🛒'}</div>
+    <div class="min-order-progress">
+      <div class="min-order-text">${subtotalCheck>=50?'ถึงขั้นต่ำแล้ว ('+subtotalCheck+' บาท)':'ยังขาดอีก '+remainToMin+' บาท (ขั้นต่ำ 50 บาท)'}</div>
+      <div class="min-order-bar-bg"><div class="min-order-bar-fill" style="width:${minOrderPct}%"></div></div>
+    </div>
+  </div>
+  ${giftItems.length?`<div class="gift-banner" style="display:block;"><div class="gift-banner-title">🎁 ของแถมฟรี!</div><div class="gift-banner-sub">${giftItems.join(' + ')}</div></div>`:''}`;
+
+  let cartHTML=cart.map(c=>`
+    <div class="cart-item">
+      <img class="cart-item-img" src="${c.img}" alt="${c.name}">
+      <div class="cart-item-info">
+        <div class="cart-item-name">${c.name}${c.bulk?' 📦':''}</div>
+        ${c.opts?`<div class="cart-item-opts">ไส้: ${c.opts}</div>`:''}
+        ${c.bulk?`<div class="cart-item-opts">📅 รับ: ${c.bulkDate} เวลา ${c.bulkTime||'10:00'} น. 🚚ฟรี</div>`:''}
+        ${c.freeItems?`<div class="cart-item-bulk">🎁 แถมฟรี ${c.freeItems} ชิ้น</div>`:''}
+        <div class="cart-item-price">${c.price*c.qty} บาท</div>
+      </div>
+      <div class="cart-item-controls">
+        ${!c.bulk?`<button class="qty-btn" onclick="cartQty('${c.key}',-1)">−</button>
+        <div class="qty-display">${c.qty}</div>
+        <button class="qty-btn" onclick="cartQty('${c.key}',1)">+</button>`:`<div style="font-size:13px;font-weight:700;">${c.qty}ชิ้น</div>`}
+        <button class="cart-remove-btn" onclick="removeFromCart('${c.key}')">🗑</button>
+      </div>
+    </div>`).join('');
+
+  cartHTML = minBarHTML + cartHTML;
+  cartHTML+=`<div class="cart-footer">
+    <div class="cart-row"><span>ยอดสินค้า</span><span>${subtotal} บาท</span></div>
+    ${totalFree?`<div class="cart-row" style="color:var(--success);font-weight:600;"><span>🎁 ของแถมรวม</span><span>+${totalFree} ชิ้น ฟรี!</span></div>`:''}
+    <div class="cart-row"><span>ค่าส่ง ${deliveryNote}${distKm>0?' · '+distKm.toFixed(1)+' กม.':''}</span><span>${delivery===0?'<span style=\'color:var(--success);font-weight:700;\'>ฟรี! 🚚</span>':delivery+' บาท'}</span></div>
+    <div class="cart-row cart-total"><span>รวมทั้งหมด</span><span>${total} บาท</span></div>
+  </div>
+  <div class="input-group">
+    <label class="input-label">📅 วันรับสินค้า (สำหรับสินค้าปกติ)</label>
+    <select class="input-field" id="pickupDate">
+      <option value="today">วันนี้</option>
+      <option value="tomorrow">พรุ่งนี้</option>
+      <option value="3days">3 วัน ล่วงหน้า</option>
+    </select>
+  </div>
+  <div class="input-group">
+    <label class="input-label">📍 ที่อยู่จัดส่ง</label>
+    <div style="display:flex;gap:8px;">
+      <input class="input-field" id="deliveryAddr" placeholder="เช่น 123 ถ.ชยางกูร ต.บุ่ง อ.เมือง" style="flex:1;">
+      <button onclick="openMapPicker()" style="padding:10px 12px;background:#1a73e8;color:#fff;border:none;border-radius:12px;cursor:pointer;font-size:18px;flex-shrink:0;" title="เปิด Google Maps">📍</button>
+    </div>
+    <div style="font-size:11px;color:var(--text3);margin-top:4px;">📌 รัศมี 10 กม. จากร้าน | กด 📍 เพื่อปักหมุดตำแหน่ง</div>
+    <div id="distanceInfo" style="display:none;margin-top:6px;"></div>
+    <div id="mapPreview" style="display:none;margin-top:8px;border-radius:12px;overflow:hidden;border:1px solid var(--border);"></div>
+    <div id="distanceInfo" style="display:none;margin-top:6px;"></div>
+  </div>
+  <div class="input-group">
+    <label class="input-label">📱 เบอร์โทรติดต่อ</label>
+    <input class="input-field" id="phoneNum" placeholder="กรอกเบอร์โทร" type="tel">
+  </div>
+  <div class="input-group">
+    <label class="input-label">📝 หมายเหตุ (ถ้ามี)</label>
+    <textarea class="input-field" id="orderNote" placeholder="เช่น: ไม่หวาน, ไม่ใส่ผัก, แพ้นม..." style="min-height:60px;resize:none;"></textarea>
+  </div>
+  <div class="input-group"><label class="input-label">💳 ช่องทางชำระเงิน</label></div>
+  <div class="payment-options">
+    <div class="pay-option selected" id="pay-qr" onclick="selectPay('qr')"><span class="pay-icon">📱</span>QR Promptpay</div>
+    <div class="pay-option" id="pay-transfer" onclick="selectPay('transfer')"><span class="pay-icon">🏦</span>โอนบัญชี</div>
+    <div class="pay-option" id="pay-cod" onclick="selectPay('cod')"><span class="pay-icon">💵</span>เก็บปลายทาง</div>
+  </div>
+  <button class="order-btn" onclick="placeOrder()" ${total-delivery<50?'style="background:#aaa;cursor:not-allowed;"':''}>${total-delivery<50?'🛒 ยังขาดอีก '+(50-(total-delivery))+' บาท (ขั้นต่ำ 50฿)':'✅ ยืนยันสั่งซื้อ '+total+' บาท'}</button>`;
+
+  el.innerHTML=cartHTML;
+}
+
+let selectedPay='qr';
+function selectPay(type) {
+  selectedPay=type;
+  ['qr','transfer','cod'].forEach(t=>document.getElementById('pay-'+t).classList.toggle('selected',t===type));
+}
+function cartQty(key,delta) {
+  const item=cart.find(c=>c.key===key);
+  if(!item) return;
+  item.qty+=delta;
+  if(item.qty<=0) cart=cart.filter(c=>c.key!==key);
+  updateCartBadge(); renderCart();
+}
+function removeFromCart(key) { cart=cart.filter(c=>c.key!==key); updateCartBadge(); renderCart(); }
+
+function placeOrder() {
+  if(!isShopOpen()) { showToast('ร้านปิดแล้ว เปิด 08:00-20:00'); return; }
+  const subtotalNow=cart.reduce((s,c)=>s+c.price*c.qty,0);
+  if(subtotalNow<50) { showToast('สั่งขั้นต่ำ 50 บาท (ยังขาด '+(50-subtotalNow)+' บาท)'); return; }
+  const addr=document.getElementById('deliveryAddr')?.value;
+  const phone=document.getElementById('phoneNum')?.value;
+  const note=document.getElementById('orderNote')?.value||'';
+  if(!addr?.trim()) { showToast('กรุณากรอกที่อยู่จัดส่ง'); return; }
+  if(!phone?.trim()) { showToast('กรุณากรอกเบอร์โทร'); return; }
+  if(window._lastDistance && window._lastDistance>10) { showToast('⚠️ นอกเขตส่ง (เกิน 10 กม.)'); return; }
+  const totalFree=cart.reduce((s,c)=>s+(c.freeItems||0),0);
+  const hasNormalItems2=cart.some(c=>!c.bulk);
+  const deliveryFee=hasNormalItems2?calcDeliveryFee(window._lastDistance||0):0;
+  const ord={
+    id:'JB'+Date.now().toString().slice(-6), items:[...cart],
+    total:cart.reduce((s,c)=>s+c.price*c.qty,0)+deliveryFee, deliveryFee,
+    freeItems:totalFree, addr, phone, note, pay:selectedPay, status:'pending',
+    time:new Date().toLocaleTimeString('th',{hour:'2-digit',minute:'2-digit'}),
+    date:new Date().toLocaleDateString('th'), user:currentUser, steps:[true,false,false,false],
+  };
+  orders.unshift(ord);
+  localStorage.setItem('juiceBakeryOrders',JSON.stringify(orders));
+  cart=[]; updateCartBadge();
+  points+=Math.floor(ord.total/10);
+  setTimeout(()=>{ ord.status='preparing'; ord.steps=[true,true,false,false]; localStorage.setItem('juiceBakeryOrders',JSON.stringify(orders)); },5000);
+  setTimeout(()=>{ ord.status='delivering'; ord.steps=[true,true,true,false]; localStorage.setItem('juiceBakeryOrders',JSON.stringify(orders)); },12000);
+  document.getElementById('successSub').innerHTML=`ออเดอร์ #${ord.id}<br>${totalFree?'🎁 ของแถม '+totalFree+' ชิ้น!<br>':''}ได้รับ +${Math.floor(ord.total/10)} แต้ม`;
+  document.getElementById('successModal').classList.add('open');
+}
+function closeSuccess() { document.getElementById('successModal').classList.remove('open'); showScreen('orders'); }
+
+const STATUS_LABEL={pending:'รอรับออเดอร์',preparing:'กำลังเตรียม',delivering:'กำลังส่ง',done:'ส่งสำเร็จ'};
+const STATUS_CLASS={pending:'status-pending',preparing:'status-preparing',delivering:'status-delivering',done:'status-done'};
+
+function renderOrders() {
+  const el=document.getElementById('ordersList');
+  const myOrders=isOwner?orders:orders.filter(o=>o.user===currentUser||!o.user);
+  if(!myOrders.length) { el.innerHTML=`<div class="cart-empty"><div class="empty-icon">📦</div><p>ยังไม่มีออเดอร์</p></div>`; return; }
+  el.innerHTML=myOrders.map(o=>{
+    const steps=o.steps||[true,false,false,false];
+    return `<div class="order-card">
+      <div class="order-header">
+        <div class="order-id">ออเดอร์ #${o.id}</div>
+        <div class="order-status ${STATUS_CLASS[o.status]}">${STATUS_LABEL[o.status]}</div>
+      </div>
+      <div style="font-size:12px;color:var(--text2);margin:6px 0;">${o.items.map(i=>`${i.name} x${i.qty}${i.freeItems?' (+'+i.freeItems+'ฟรี)':''}`).join(', ')}</div>
+      ${o.freeItems?`<div style="font-size:12px;color:var(--success);font-weight:600;margin-bottom:4px;">🎁 ของแถมรวม +${o.freeItems} ชิ้น</div>`:''}
+      <div class="order-total">${o.total} บาท | ${o.date} ${o.time}</div>
+      <div class="order-track">
+        <div class="track-step"><div class="track-dot ${steps[0]?'done':''}">✓</div><div class="track-label">รับออเดอร์</div><div class="track-line ${steps[1]?'done':''}"></div></div>
+        <div class="track-step"><div class="track-dot ${steps[1]?(steps[2]?'done':'active'):''}">🍞</div><div class="track-label">เตรียมขนม</div><div class="track-line ${steps[2]?'done':''}"></div></div>
+        <div class="track-step"><div class="track-dot ${steps[2]?(steps[3]?'done':'active'):''}">🛵</div><div class="track-label">กำลังส่ง</div><div class="track-line ${steps[3]?'done':''}"></div></div>
+        <div class="track-step"><div class="track-dot ${steps[3]?'done':''}">✅</div><div class="track-label">ส่งสำเร็จ</div></div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderProfile() {
+  document.getElementById('profileName').textContent=currentUser||'แขก';
+  document.getElementById('profileSub').textContent=isOwner?'👑 เจ้าของร้าน':'⭐ สมาชิก | '+points+' แต้ม';
+  document.getElementById('pointsVal').textContent=points+' แต้ม';
+  document.getElementById('pointsFill').style.width=Math.min(100,(points/500)*100)+'%';
+}
+
+function ownerTab(tab,btn) {
+  ownerCurrentTab=tab;
+  document.querySelectorAll('.owner-nav-btn').forEach(b=>b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  renderOwner(tab);
+}
+function ownerTab2(tab, btn) {
+  ownerCurrentTab=tab;
+  document.querySelectorAll('#ownerNav .nav-btn').forEach(b=>b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  showScreen('owner');
+  renderOwner(tab);
+}
+
+function renderOwner(tab) {
+  const el=document.getElementById('ownerContent');
+  if(tab==='dashboard') {
+    const todayOrders=orders.filter(o=>o.date===new Date().toLocaleDateString('th'));
+    const todayRev=todayOrders.reduce((s,o)=>s+o.total,0);
+    el.innerHTML=`<div class="stats-grid">
+      <div class="stat-card"><div class="stat-val">${orders.length}</div><div class="stat-label">ออเดอร์ทั้งหมด</div></div>
+      <div class="stat-card"><div class="stat-val">${todayOrders.length}</div><div class="stat-label">ออเดอร์วันนี้</div></div>
+      <div class="stat-card"><div class="stat-val">${todayRev}</div><div class="stat-label">ยอดขายวันนี้ (฿)</div></div>
+      <div class="stat-card"><div class="stat-val">${orders.reduce((s,o)=>s+o.total,0)}</div><div class="stat-label">ยอดรวมทั้งหมด (฿)</div></div>
+    </div>
+    <div style="background:#fff;border-radius:16px;padding:14px;margin-top:12px;box-shadow:var(--shadow2);border:1px solid var(--border);">
+      <div style="font-size:14px;font-weight:700;margin-bottom:12px;">📢 ส่งโปรโมชัน</div>
+      <textarea style="width:100%;padding:10px;border:1px solid var(--border);border-radius:10px;font-family:Kanit,sans-serif;font-size:13px;min-height:70px;" id="promoText" placeholder="เช่น: วันนี้บราวนี่ 10 บาท ซื้อ 10 แถม 1!"></textarea>
+      <button style="width:100%;margin-top:8px;padding:10px;background:var(--accent);color:#fff;border:none;border-radius:12px;font-family:Kanit,sans-serif;font-size:14px;font-weight:700;cursor:pointer;" onclick="sendPromo()">📣 ส่งโปรโมชัน</button>
+    </div>`;
+  } else if(tab==='orders') {
+    if(!orders.length) { el.innerHTML=`<div class="cart-empty"><div class="empty-icon">📋</div><p>ยังไม่มีออเดอร์</p></div>`; return; }
+    el.innerHTML=orders.map((o,idx)=>`
+      <div class="owner-order-card">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <div><div style="font-size:14px;font-weight:700;">#${o.id}</div><div style="font-size:11px;color:var(--text3);">${o.user||'ลูกค้า'} | ${o.phone||''}</div></div>
+          ${getOwnerBtn(o,idx)}
+        </div>
+        <div style="font-size:12px;color:var(--text2);margin:6px 0;">${o.items.map(i=>`${i.name} x${i.qty}${i.freeItems?' 🎁+'+i.freeItems:''}`).join(', ')}</div>
+        <div style="display:flex;justify-content:space-between;font-size:13px;font-weight:700;color:var(--primary);">${o.total} ฿ | ${o.pay==='qr'?'QR':o.pay==='transfer'?'โอน':'COD'} <span style="font-size:11px;color:var(--text3);">${o.date} ${o.time}</span></div>
+        <div style="font-size:12px;color:var(--text3);margin-top:4px;">📍 ${o.addr||'-'}</div>
+        ${o.note?`<div style="font-size:12px;color:#856404;margin-top:2px;background:#fff3cd;border-radius:6px;padding:3px 8px;">📝 ${o.note}</div>`:''}
+      </div>`).join('');
+  } else if(tab==='products') {
+    el.innerHTML=PRODUCTS.map(p=>`
+      <div class="product-manage-card">
+        <img class="pm-img" src="${p.img}" alt="${p.name}">
+        <div class="pm-info"><div class="pm-name">${p.name}</div><div class="pm-price">${p.price} บาท | ${p.cat}</div></div>
+        <div class="toggle-switch ${stockState[p.id].available?'on':''}" onclick="toggleProduct(${p.id},this)"><div class="toggle-knob"></div></div>
+      </div>`).join('');
+  } else if(tab==='report') {
+    const prodSales={};
+    orders.forEach(o=>o.items.forEach(i=>{ prodSales[i.name]=(prodSales[i.name]||0)+i.qty; }));
+    const sorted=Object.entries(prodSales).sort((a,b)=>b[1]-a[1]).slice(0,8);
+    const maxVal=sorted[0]?.[1]||1;
+    el.innerHTML=`<div style="background:#fff;border-radius:16px;padding:14px;box-shadow:var(--shadow2);border:1px solid var(--border);">
+      <div style="font-size:15px;font-weight:700;margin-bottom:14px;">🏆 สินค้าขายดี</div>
+      <div class="chart-bar-wrap">${sorted.map(([name,qty])=>`
+        <div class="chart-row">
+          <div class="chart-label">${name.length>7?name.slice(0,6)+'…':name}</div>
+          <div class="chart-bar-bg"><div class="chart-bar-fill" style="width:${Math.max(10,(qty/maxVal)*100)}%"><span class="chart-bar-val">${qty}</span></div></div>
+        </div>`).join('')}${!sorted.length?'<div style="color:var(--text3);font-size:13px;">ยังไม่มีข้อมูล</div>':''}</div>
+    </div>
+    <div style="background:#fff;border-radius:16px;padding:14px;margin-top:12px;box-shadow:var(--shadow2);border:1px solid var(--border);">
+      <div style="font-size:15px;font-weight:700;margin-bottom:12px;">💰 สรุปรายได้</div>
+      <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);font-size:13px;"><span>ออเดอร์ทั้งหมด</span><span>${orders.length} รายการ</span></div>
+      <div style="display:flex;justify-content:space-between;padding:6px 0;font-size:15px;font-weight:800;color:var(--primary);"><span>รวมรายได้</span><span>${orders.reduce((s,o)=>s+o.total,0)} บาท</span></div>
+    </div>`;
+  } else if(tab==='members') {
+    const mems = getMembers();
+    if(!mems.length) {
+      el.innerHTML=`<div class="cart-empty"><div class="empty-icon">👥</div><p>ยังไม่มีสมาชิก</p></div>`;
+      return;
+    }
+    el.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+      <div style="font-size:15px;font-weight:700;">👥 สมาชิกทั้งหมด (${mems.length} คน)</div>
+    </div>` + mems.map((m,i)=>`
+      <div class="member-card">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px;">
+          <div class="member-avatar">${m.name?m.name[0].toUpperCase():'U'}</div>
+          <div style="flex:1;">
+            <div style="font-size:14px;font-weight:700;">${m.name||'-'}</div>
+            <div style="font-size:12px;color:var(--text3);">@${m.username} | สมัคร ${m.joinDate||'-'}</div>
+          </div>
+          <button onclick="toggleMemberDetail(${i})" style="background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:5px 10px;cursor:pointer;font-size:12px;font-family:Kanit,sans-serif;">ดูข้อมูล</button>
+        </div>
+        <div id="member-detail-${i}" style="display:none;background:var(--bg);border-radius:10px;padding:10px;font-size:12px;line-height:2;">
+          <div>📱 เบอร์โทร: <strong>${m.phone||'-'}</strong></div>
+          <div>📍 ที่อยู่: ${m.address||'-'}</div>
+          <div>⭐ แต้มสะสม: <strong style="color:var(--accent-dark);">${m.points||0} แต้ม</strong></div>
+          <div>📦 สั่งซื้อทั้งหมด: <strong>${orders.filter(o=>o.user===m.username).length} ครั้ง</strong></div>
+          <div>💰 ยอดซื้อรวม: <strong style="color:var(--primary);">${orders.filter(o=>o.user===m.username).reduce((s,o)=>s+o.total,0)} บาท</strong></div>
+        </div>
+      </div>`).join('');
+  } else if(tab==='products') {
+    el.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+      <div style="font-size:15px;font-weight:700;">🛒 จัดการสินค้า</div>
+      <button onclick="openAddProduct()" style="padding:8px 14px;background:var(--success);color:#fff;border:none;border-radius:10px;font-family:Kanit,sans-serif;font-size:13px;font-weight:700;cursor:pointer;">+ เพิ่มสินค้า</button>
+    </div>` + getAllProducts().map((p,i)=>`
+      <div class="product-manage-card">
+        <img class="pm-img" src="${p.img||IMGS.logo}" alt="${p.name}" onerror="this.src='${IMGS.logo}'">
+        <div class="pm-info">
+          <div class="pm-name">${p.name}</div>
+          <div class="pm-price">${p.price} บาท | ${p.cat}${p.custom?' · ✏️ เพิ่มเอง':''}</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-end;">
+          <div class="toggle-switch ${stockState[p.id]?.available!==false?'on':''}" onclick="toggleProduct(${p.id},this)"><div class="toggle-knob"></div></div>
+          <div style="display:flex;gap:4px;">
+            <button onclick="openEditProduct(${p.id})" style="padding:4px 8px;background:var(--info);color:#fff;border:none;border-radius:6px;font-size:11px;cursor:pointer;font-family:Kanit,sans-serif;">✏️</button>
+            <button onclick="deleteProduct(${p.id})" style="padding:4px 8px;background:#e74c3c;color:#fff;border:none;border-radius:6px;font-size:11px;cursor:pointer;font-family:Kanit,sans-serif;">🗑</button>
+          </div>
+        </div>
+      </div>`).join('');
+  }
+}
+
+function getOwnerBtn(o,idx) {
+  if(o.status==='pending') return `<button style="padding:6px 12px;border-radius:10px;border:none;font-size:12px;font-weight:700;cursor:pointer;font-family:Kanit,sans-serif;background:var(--success);color:#fff;" onclick="advanceOrder(${idx})">รับออเดอร์</button>`;
+  if(o.status==='preparing') return `<button style="padding:6px 12px;border-radius:10px;border:none;font-size:12px;font-weight:700;cursor:pointer;font-family:Kanit,sans-serif;background:var(--accent-dark);color:#fff;" onclick="advanceOrder(${idx})">ส่งสินค้า</button>`;
+  if(o.status==='delivering') return `<button style="padding:6px 12px;border-radius:10px;border:none;font-size:12px;font-weight:700;cursor:pointer;font-family:Kanit,sans-serif;background:#aaa;color:#fff;" onclick="advanceOrder(${idx})">ส่งสำเร็จ</button>`;
+  return `<button style="padding:6px 12px;border-radius:10px;border:none;font-size:12px;font-weight:700;font-family:Kanit,sans-serif;background:#ddd;color:#999;" disabled>เสร็จแล้ว</button>`;
+}
+
+function advanceOrder(idx) {
+  const o=orders[idx];
+  if(o.status==='pending'){o.status='preparing';o.steps=[true,true,false,false];}
+  else if(o.status==='preparing'){o.status='delivering';o.steps=[true,true,true,false];}
+  else if(o.status==='delivering'){o.status='done';o.steps=[true,true,true,true];}
+  localStorage.setItem('juiceBakeryOrders',JSON.stringify(orders));
+  renderOwner('orders'); showToast('อัปเดตสถานะเรียบร้อย!');
+}
+
+function toggleProduct(pid,el) {
+  stockState[pid].available=!stockState[pid].available;
+  el.classList.toggle('on');
+  showToast(stockState[pid].available?'เปิดขายแล้ว':'ปิดขายชั่วคราว');
+  renderProducts(document.getElementById('searchBox')?.value||'',currentCat);
+}
+function sendPromo() {
+  const msg=document.getElementById('promoText').value.trim();
+  if(!msg){showToast('กรุณากรอกข้อความ');return;}
+  showToast('ส่งโปรโมชันสำเร็จ! 📣');
+  document.getElementById('promoText').value='';
+}
+
+function showToast(msg) {
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2500);
+}
+
+renderProducts();
+
+
+
+// ===== MEMBERS =====
+let members = JSON.parse(localStorage.getItem('juiceBakeryMembers')||'[]');
+function getMembers() { return members; }
+function saveMembers() { localStorage.setItem('juiceBakeryMembers', JSON.stringify(members)); }
+
+function openRegister() {
+  document.getElementById('loginModal').classList.remove('open');
+  document.getElementById('registerScreen').classList.add('open');
+}
+function closeRegister() {
+  document.getElementById('registerScreen').classList.remove('open');
+  document.getElementById('loginModal').classList.add('open');
+}
+function doRegister() {
+  const name = document.getElementById('regName').value.trim();
+  const phone = document.getElementById('regPhone').value.trim();
+  const username = document.getElementById('regUser').value.trim();
+  const pass = document.getElementById('regPass').value.trim();
+  const addr = document.getElementById('regAddr').value.trim();
+  if(!name||!phone||!username||!pass) { showToast('กรุณากรอกข้อมูลให้ครบ'); return; }
+  if(members.find(m=>m.username===username)) { showToast('ชื่อผู้ใช้นี้มีแล้ว'); return; }
+  members.push({ name, phone, username, pass, address:addr, points:0, joinDate:new Date().toLocaleDateString('th') });
+  saveMembers();
+  document.getElementById('registerScreen').classList.remove('open');
+  currentUser = username; isOwner = false; points = 0;
+  document.getElementById('app').style.display='block';
+  document.getElementById('topbarSub').textContent='สวัสดี, '+name+'!';
+  document.getElementById('customerNav').style.display='flex';
+  document.getElementById('ownerNav').style.display='none';
+  renderProducts(); updateAiCard();
+  showToast('🎉 สมัครสมาชิกสำเร็จ! ยินดีต้อนรับ '+name);
+}
+
+// Extend doLogin to check members
+const _origDoLogin = window.doLogin;
+window.doLogin = function() {
+  const u = document.getElementById('loginUser').value.trim();
+  const p = document.getElementById('loginPass').value.trim();
+  if(!u) { showToast('กรุณากรอกชื่อผู้ใช้'); return; }
+  const mem = members.find(m=>m.username===u && m.pass===p);
+  if(mem) { currentUser=u; isOwner=false; points=mem.points||0; finishLogin(); return; }
+  currentUser=u;
+  isOwner = (u==='admin' && p==='1234') || (u==='owner');
+  finishLogin();
+};
+
+function toggleMemberDetail(i) {
+  const el = document.getElementById('member-detail-'+i);
+  if(el) el.style.display = el.style.display==='none'?'block':'none';
+}
+
+// ===== PRODUCT CRUD =====
+let customProds = JSON.parse(localStorage.getItem('juiceCustomProds')||'[]');
+function getAllProducts() { return [...PRODUCTS, ...customProds]; }
+function saveCustomProds() { localStorage.setItem('juiceCustomProds', JSON.stringify(customProds)); }
+let editingProdImage = null;
+
+function openAddProduct() {
+  document.getElementById('prodModalTitle').textContent = '+ เพิ่มสินค้าใหม่';
+  ['editProdId','editProdName','editProdPrice','editProdDesc','editProdBadge','editProdOptions'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('editProdCat').value='bread';
+  document.getElementById('editProdStock').value='50';
+  document.getElementById('prodImgPreview').style.display='none';
+  editingProdImage=null;
+  document.getElementById('prodModal').classList.add('open');
+}
+
+function openEditProduct(pid) {
+  const p = getAllProducts().find(x=>x.id==pid);
+  if(!p) return;
+  document.getElementById('prodModalTitle').textContent='✏️ แก้ไข: '+p.name;
+  document.getElementById('editProdId').value=pid;
+  document.getElementById('editProdName').value=p.name;
+  document.getElementById('editProdPrice').value=p.price;
+  document.getElementById('editProdCat').value=p.cat;
+  document.getElementById('editProdDesc').value=p.desc||'';
+  document.getElementById('editProdStock').value=stockState[pid]?.qty||50;
+  document.getElementById('editProdBadge').value=p.badge||'';
+  document.getElementById('editProdOptions').value=p.options?p.options.join(','):'';
+  editingProdImage=p.img||null;
+  const prev=document.getElementById('prodImgPreview');
+  if(p.img){document.getElementById('prodImgPreviewImg').src=p.img;prev.style.display='block';}
+  else prev.style.display='none';
+  document.getElementById('prodModal').classList.add('open');
+}
+
+function previewProdImg(input) {
+  const file=input.files[0]; if(!file) return;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    editingProdImage=e.target.result;
+    document.getElementById('prodImgPreviewImg').src=e.target.result;
+    document.getElementById('prodImgPreview').style.display='block';
+  };
+  reader.readAsDataURL(file);
+}
+
+function saveProdEdit() {
+  const name=document.getElementById('editProdName').value.trim();
+  const price=parseInt(document.getElementById('editProdPrice').value);
+  const cat=document.getElementById('editProdCat').value;
+  const desc=document.getElementById('editProdDesc').value.trim();
+  const stock=parseInt(document.getElementById('editProdStock').value)||50;
+  const badge=document.getElementById('editProdBadge').value.trim();
+  const optsRaw=document.getElementById('editProdOptions').value.trim();
+  const opts=optsRaw?optsRaw.split(',').map(s=>s.trim()).filter(Boolean):null;
+  const existingId=document.getElementById('editProdId').value;
+  if(!name||!price){showToast('กรุณากรอกชื่อและราคา');return;}
+  if(existingId) {
+    const idx=customProds.findIndex(p=>p.id==existingId);
+    if(idx>=0){
+      customProds[idx]={...customProds[idx],name,price,cat,desc,badge,stock,options:opts,hasOptions:!!(opts&&opts.length),img:editingProdImage||customProds[idx].img};
+      stockState[existingId]={available:stockState[existingId]?.available!==false,qty:stock};
+    }
+    saveCustomProds(); showToast('✅ แก้ไขสินค้าเรียบร้อย');
+  } else {
+    const newId=Date.now();
+    customProds.push({id:newId,name,price,cat,desc,badge,stock,options:opts,hasOptions:!!(opts&&opts.length),img:editingProdImage||IMGS.logo,custom:true});
+    stockState[newId]={available:true,qty:stock};
+    saveCustomProds(); showToast('✅ เพิ่มสินค้าใหม่ "'+name+'" แล้ว');
+  }
+  document.getElementById('prodModal').classList.remove('open');
+  renderOwner('products');
+  renderProductsWithCustom();
+}
+
+function deleteProduct(pid) {
+  const p=getAllProducts().find(x=>x.id==pid);
+  if(!p){return;}
+  if(!p.custom){showToast('สินค้าหลักลบไม่ได้ — ปิดขายแทน');return;}
+  if(!confirm('ลบ "'+p.name+'" ใช่ไหม?')){return;}
+  customProds=customProds.filter(x=>x.id!=pid);
+  saveCustomProds();
+  renderOwner('products');
+  renderProductsWithCustom();
+  showToast('🗑 ลบสินค้าแล้ว');
+}
+
+function closeProdModal(e) {
+  if(!e||e.target===document.getElementById('prodModal'))
+    document.getElementById('prodModal').classList.remove('open');
+}
+
+function renderProductsWithCustom(filter='', cat='all') {
+  const grid=document.getElementById('productsGrid');
+  if(!grid) return;
+  let prods=getAllProducts().filter(p=>{
+    const matchCat=cat==='all'||p.cat===cat||(cat==='price5'&&p.price===5)||(cat==='price10'&&p.price===10);
+    const matchSearch=!filter||p.name.toLowerCase().includes(filter.toLowerCase());
+    return matchCat&&matchSearch;
+  });
+  const flash=isFlashSale();
+  grid.innerHTML=prods.map(p=>{
+    const inCart=cart.find(c=>c.id==p.id&&!c.opts&&!c.bulk);
+    const qty=inCart?inCart.qty:0;
+    const avail=stockState[p.id]?.available!==false;
+    const displayPrice=flash?Math.ceil(p.price*0.5):p.price;
+    return `<div class="product-card${!avail?' sold-out':''}">
+      ${p.badge?`<div class="product-badge">${p.badge}</div>`:''}
+      ${flash?'<div class="flash-product-badge">⚡ -50%</div>':''}
+      ${!avail?'<div class="sold-out-badge"><span class="sold-out-label">สินค้าหมด</span></div>':''}
+      <img class="product-img" src="${p.img||IMGS.logo}" alt="${p.name}" loading="lazy" onerror="this.src='${IMGS.logo}'">
+      <div class="product-info">
+        <div class="product-name">${p.name}</div>
+        <div class="product-price">${flash?`<span style="text-decoration:line-through;color:#aaa;font-size:12px;">${p.price}฿</span> <span style="color:#e67e22;">${displayPrice} บาท</span>`:p.price+' บาท'}</div>
+        ${qty>0&&avail?`<div class="qty-row">
+          <button class="qty-btn" onclick="updateQty(${p.id},-1)">−</button>
+          <div class="qty-display">${qty}</div>
+          <button class="qty-btn" onclick="updateQty(${p.id},1)">+</button>
+        </div>`:`<button class="add-btn" ${!avail?'disabled':''} onclick="${p.hasOptions?`showOptions(${p.id})`:`addToCart(${p.id})`}">
+          ${avail?'+ เพิ่มลงตะกร้า':'สินค้าหมด'}
+        </button>`}
+        ${avail?`<button class="bulk-order-btn" onclick="showBulkModal(${p.id})">📦 สั่งจำนวนเยอะ (พรีออเดอร์)</button>`:''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// Patch filterProducts and setCat to use custom product render
+const _origFilter = filterProducts;
+filterProducts = function(val) { renderProductsWithCustom(val, currentCat); };
+const _origSetCat = setCat;
+setCat = function(cat, btn) {
+  currentCat=cat;
+  document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderProductsWithCustom(document.getElementById('searchBox').value, cat);
+};
+
+// Init custom products render + set logo
+document.getElementById('regLogoImg').src = IMGS.logo;
+renderProductsWithCustom();
+updateShopUI();
+
+</script>
+
+
+<script>
+// Register Service Worker
+if('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js').catch(()=>{});
+  });
+}
+
+// ===== MAP PICKER =====
+const SHOP_LAT = 15.8656, SHOP_LNG = 104.6250;
+let selectedMapLocation = null;
+
+function openMapPicker() {
+  document.getElementById('mapModal').style.display = 'flex';
+  selectedMapLocation = null;
+  const btn = document.getElementById('confirmMapBtn');
+  btn.disabled = true; btn.style.background = '#ccc'; btn.style.cursor = 'not-allowed';
+  document.getElementById('mapSelectedAddr').style.display = 'none';
+  document.getElementById('mapDistPreview').style.display = 'none';
+  document.getElementById('mapSearchResults').style.display = 'none';
+  document.getElementById('mapFrame').innerHTML = '<div style="font-size:40px;">🗺️</div><div style="font-size:13px;color:var(--text3);text-align:center;padding:0 20px;">ค้นหาสถานที่ หรือกด GPS</div>';
+}
+
+function closeMapModal() {
+  document.getElementById('mapModal').style.display = 'none';
+}
+
+function setMapLocation(lat, lng, addr) {
+  selectedMapLocation = { lat, lng, address: addr };
+  // Google Maps static embed via iframe
+  const mapSrc = `https://maps.google.com/maps?q=${lat},${lng}&z=16&output=embed`;
+  document.getElementById('mapFrame').innerHTML = `<iframe src="${mapSrc}" width="100%" height="260" frameborder="0" style="border:0;display:block;" allowfullscreen loading="lazy"></iframe>`;
+  document.getElementById('mapSearchResults').style.display = 'none';
+
+  const addrEl = document.getElementById('mapSelectedAddr');
+  addrEl.style.display = 'block';
+  addrEl.innerHTML = `<strong>📍 ตำแหน่งที่เลือก:</strong><br>${addr}`;
+
+  const dist = calcDistanceKm(SHOP_LAT, SHOP_LNG, lat, lng);
+  const fee = calcDeliveryFee(dist);
+  const distEl = document.getElementById('mapDistPreview');
+  distEl.style.display = 'block';
+  if(dist > 10) {
+    distEl.innerHTML = `<div class="distance-badge distance-over">⚠️ ระยะ ${dist.toFixed(1)} กม. — นอกเขตส่ง (เกิน 10 กม.)</div>`;
+  } else if(dist > 3) {
+    distEl.innerHTML = `<div class="distance-badge distance-warn">🛵 ระยะ ${dist.toFixed(1)} กม. — ค่าส่ง ${fee} บาท</div>`;
+  } else {
+    distEl.innerHTML = `<div class="distance-badge distance-ok">✅ ระยะ ${dist.toFixed(1)} กม. — <strong>ส่งฟรี! 🚚</strong></div>`;
+  }
+
+  const btn = document.getElementById('confirmMapBtn');
+  btn.disabled = false; btn.style.background = 'var(--primary)'; btn.style.cursor = 'pointer';
+}
+
+function useCurrentLocation() {
+  if(!navigator.geolocation) { showToast('เบราว์เซอร์ไม่รองรับ GPS'); return; }
+  document.getElementById('mapFrame').innerHTML = '<div style="font-size:40px;">📡</div><div style="font-size:13px;color:var(--text3);">กำลังระบุตำแหน่ง...</div>';
+  navigator.geolocation.getCurrentPosition(pos => {
+    const lat = pos.coords.latitude, lng = pos.coords.longitude;
+    fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`, {headers:{'Accept-Language':'th'}})
+      .then(r=>r.json())
+      .then(d => setMapLocation(lat, lng, d.display_name || `${lat.toFixed(5)},${lng.toFixed(5)}`))
+      .catch(() => setMapLocation(lat, lng, `${lat.toFixed(5)}, ${lng.toFixed(5)}`));
+  }, () => {
+    showToast('ไม่สามารถเข้าถึง GPS — ลองค้นหาด้วยชื่อสถานที่');
+    document.getElementById('mapFrame').innerHTML = '<div style="font-size:40px;">❌</div><div style="font-size:13px;color:var(--text3);text-align:center;">เข้าถึง GPS ไม่ได้</div>';
+  }, { timeout:10000, enableHighAccuracy:true });
+}
+
+function searchMapPlace() {
+  const q = document.getElementById('mapSearchInput').value.trim();
+  if(!q) { showToast('กรุณากรอกชื่อสถานที่'); return; }
+  document.getElementById('mapFrame').innerHTML = '<div style="font-size:40px;">🔍</div><div style="font-size:13px;color:var(--text3);">กำลังค้นหา...</div>';
+  const query = (q.includes('อำนาจ') || q.includes('amnat')) ? q : q + ' อำนาจเจริญ ประเทศไทย';
+  fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&limit=5&accept-language=th&countrycodes=th`)
+    .then(r=>r.json())
+    .then(results => {
+      if(!results.length) { showToast('ไม่พบสถานที่'); return; }
+      const resEl = document.getElementById('mapSearchResults');
+      resEl.style.display = 'block';
+      resEl.innerHTML = results.map((r,i) =>
+        `<div onclick="pickSearchResult(${r.lat},${r.lon},'${r.display_name.replace(/'/g,'&apos;')}')"
+          style="padding:10px 14px;border-bottom:1px solid var(--border);cursor:pointer;font-size:12px;line-height:1.4;"
+          onmouseover="this.style.background='#f0f0f0'" onmouseout="this.style.background='white'">
+          📍 ${r.display_name}
+        </div>`).join('');
+      pickSearchResult(results[0].lat, results[0].lon, results[0].display_name);
+    })
+    .catch(() => showToast('เกิดข้อผิดพลาด ลองใหม่'));
+}
+
+function pickSearchResult(lat, lon, addr) {
+  setMapLocation(parseFloat(lat), parseFloat(lon), addr);
+}
+
+function confirmMapLocation() {
+  if(!selectedMapLocation) return;
+  const addr = selectedMapLocation.address || `${selectedMapLocation.lat.toFixed(5)}, ${selectedMapLocation.lng.toFixed(5)}`;
+  document.getElementById('deliveryAddr').value = addr;
+
+  const dist = calcDistanceKm(SHOP_LAT, SHOP_LNG, selectedMapLocation.lat, selectedMapLocation.lng);
+  window._lastDistance = dist;
+  const fee = calcDeliveryFee(dist);
+
+  const distEl = document.getElementById('distanceInfo');
+  if(distEl) {
+    distEl.style.display = 'block';
+    if(dist > 10) distEl.innerHTML = `<div class="distance-badge distance-over">⚠️ ระยะ ${dist.toFixed(1)} กม. — นอกเขตส่ง</div>`;
+    else if(dist > 3) distEl.innerHTML = `<div class="distance-badge distance-warn">🛵 ระยะ ${dist.toFixed(1)} กม. — ค่าส่ง ${fee} บาท</div>`;
+    else distEl.innerHTML = `<div class="distance-badge distance-ok">✅ ระยะ ${dist.toFixed(1)} กม. — <strong>ส่งฟรี! 🚚</strong></div>`;
+  }
+
+  const mapsLink = `https://maps.google.com/?q=${selectedMapLocation.lat},${selectedMapLocation.lng}`;
+  const preview = document.getElementById('mapPreview');
+  if(preview) {
+    preview.style.display = 'block';
+    const mapSrc = `https://maps.google.com/maps?q=${selectedMapLocation.lat},${selectedMapLocation.lng}&z=15&output=embed`;
+    preview.innerHTML = `<div style="position:relative;">
+      <iframe src="${mapSrc}" width="100%" height="140" frameborder="0" style="border:0;display:block;" allowfullscreen loading="lazy"></iframe>
+      <a href="${mapsLink}" target="_blank" style="position:absolute;bottom:6px;right:6px;background:var(--primary);color:#fff;padding:4px 10px;border-radius:8px;font-size:11px;font-weight:700;text-decoration:none;">เปิดใน Google Maps ↗</a>
+    </div>`;
+  }
+
+  renderCart();
+  closeMapModal();
+  if(dist > 10) showToast('⚠️ นอกเขตส่ง! ระยะ ' + dist.toFixed(1) + ' กม.');
+  else if(dist <= 3) showToast('🎉 ระยะ ' + dist.toFixed(1) + ' กม. — ส่งฟรี!');
+  else showToast('📍 ระยะ ' + dist.toFixed(1) + ' กม. — ค่าส่ง ' + fee + ' บาท');
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const inp = document.getElementById('mapSearchInput');
+  if(inp) inp.addEventListener('keydown', e => { if(e.key==='Enter') searchMapPlace(); });
+});
+
+// ===== PWA INSTALL PROMPT =====
+let deferredPrompt = null;
+
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  deferredPrompt = e;
+  showPWABanner();
+});
+
+window.addEventListener('appinstalled', () => {
+  hidePWABanner();
+  showToast('🎉 ติดตั้งแอปสำเร็จแล้ว!');
+});
+
+function showPWABanner() {
+  const banner = document.getElementById('pwa-install-banner');
+  if(banner && localStorage.getItem('pwaBannerDismissed') !== '1') {
+    banner.style.display = 'block';
+    // Set banner icon
+    const ico = document.getElementById('bannerIcon');
+    if(ico && typeof IMGS !== 'undefined') ico.src = IMGS.logo;
+    // Push app content down
+    document.getElementById('app') && (document.getElementById('app').style.marginTop = '80px');
+  }
+}
+
+function hidePWABanner() {
+  const banner = document.getElementById('pwa-install-banner');
+  if(banner) { banner.style.display = 'none'; }
+  const app = document.getElementById('app');
+  if(app) app.style.marginTop = '';
+  localStorage.setItem('pwaBannerDismissed', '1');
+}
+
+async function triggerInstall() {
+  if(deferredPrompt) {
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    deferredPrompt = null;
+    if(outcome === 'accepted') { hidePWABanner(); showToast('🎉 กำลังติดตั้ง...'); }
+  } else {
+    // Fallback for iOS/browsers without beforeinstallprompt
+    showInstallGuide();
+  }
+}
+
+function showInstallGuide() {
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+  const isAndroid = /Android/.test(navigator.userAgent);
+  let msg = '';
+  if(isIOS) msg = 'iOS: กดปุ่มแชร์ (□↑) แล้วเลือก "เพิ่มไปยังหน้าจอโฮม"';
+  else if(isAndroid) msg = 'Android: กดเมนู 3 จุด แล้วเลือก "ติดตั้งแอป" หรือ "เพิ่มในหน้าจอหลัก"';
+  else msg = 'เปิดเบราว์เซอร์บนมือถือเพื่อติดตั้ง';
+  alert('วิธีติดตั้งแอป:\n\n' + msg);
+}
+
+// Auto-show banner after 2 seconds if installable
+setTimeout(() => {
+  if(deferredPrompt) showPWABanner();
+  // For iOS, always show guide (no beforeinstallprompt)
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+  if(isIOS && localStorage.getItem('pwaBannerDismissed') !== '1') showPWABanner();
+}, 2000);
+
+// Update banner icon once IMGS is available
+setTimeout(() => {
+  const ico = document.getElementById('bannerIcon');
+  if(ico && typeof IMGS !== 'undefined') ico.src = IMGS.logo;
+}, 500);
+
+</script>
+
+<!-- GOOGLE MAP PICKER MODAL -->
+<div id="mapModal" style="display:none;position:fixed;inset:0;z-index:800;background:rgba(0,0,0,0.6);align-items:flex-end;justify-content:center;">
+  <div style="background:#fff;width:100%;max-width:430px;border-radius:24px 24px 0 0;overflow:hidden;max-height:92vh;display:flex;flex-direction:column;">
+    <div style="padding:14px 16px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border);flex-shrink:0;">
+      <div style="flex:1;font-size:16px;font-weight:700;">📍 เลือกตำแหน่งส่งสินค้า</div>
+      <button onclick="closeMapModal()" style="background:none;border:none;font-size:22px;cursor:pointer;line-height:1;">✕</button>
+    </div>
+    <div style="padding:12px 16px;overflow-y:auto;flex:1;">
+      <div style="display:flex;gap:8px;margin-bottom:10px;">
+        <input id="mapSearchInput" class="input-field" placeholder="ค้นหา เช่น ถนนชยางกูร อำนาจเจริญ..." style="flex:1;">
+        <button onclick="searchMapPlace()" style="padding:10px 14px;background:var(--primary);color:#fff;border:none;border-radius:12px;cursor:pointer;font-weight:700;font-family:Kanit,sans-serif;white-space:nowrap;">ค้นหา</button>
+      </div>
+      <button onclick="useCurrentLocation()" style="width:100%;padding:10px;background:#e8f4fd;color:#1a73e8;border:1px solid #bee3f8;border-radius:12px;cursor:pointer;font-family:Kanit,sans-serif;font-size:13px;font-weight:600;margin-bottom:10px;">📡 ใช้ GPS ตำแหน่งปัจจุบัน</button>
+      <div id="mapSearchResults" style="display:none;margin-bottom:10px;border:1px solid var(--border);border-radius:12px;overflow:hidden;max-height:160px;overflow-y:auto;"></div>
+      <div id="mapFrame" style="height:260px;border-radius:12px;overflow:hidden;border:1px solid var(--border);background:#e8efe8;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;">
+        <div style="font-size:40px;">🗺️</div>
+        <div style="font-size:13px;color:var(--text3);text-align:center;padding:0 20px;">ค้นหาสถานที่ หรือกด GPS</div>
+      </div>
+      <div id="mapSelectedAddr" style="display:none;margin-top:10px;background:#e8f4fd;border-radius:10px;padding:10px 12px;font-size:13px;border:1px solid #bee3f8;line-height:1.5;"></div>
+      <div id="mapDistPreview" style="display:none;margin-top:8px;"></div>
+    </div>
+    <div style="padding:12px 16px 28px;flex-shrink:0;border-top:1px solid var(--border);">
+      <button onclick="confirmMapLocation()" id="confirmMapBtn" style="width:100%;padding:13px;background:#ccc;color:#fff;border:none;border-radius:14px;font-size:15px;font-weight:700;cursor:not-allowed;font-family:Kanit,sans-serif;" disabled>✅ ยืนยันตำแหน่งนี้</button>
+    </div>
+  </div>
+</div>
+
+</body>

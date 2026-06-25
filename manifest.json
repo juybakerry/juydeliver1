@@ -1,0 +1,27 @@
+{
+  "name": "จุ้ย เดลิเวอรี่",
+  "short_name": "จุ้ย เดลิเวอรี่",
+  "description": "สั่งขนมออนไลน์ จุ้ย เดลิเวอรี่ อำนาจเจริญ",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#fef9f0",
+  "theme_color": "#c0392b",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "categories": [
+    "food",
+    "shopping"
+  ],
+  "lang": "th"
+}
